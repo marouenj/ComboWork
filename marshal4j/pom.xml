@@ -16,6 +16,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <testng.version>6.9.10</testng.version>
+        <slf4j.version>1.7.14</slf4j.version>
     </properties>
 
     <dependencies>
@@ -31,6 +32,13 @@
             <artifactId>mockito-all</artifactId>
             <version>1.9.5</version>
             <scope>test</scope>
+        </dependency>
+
+        <!-- LOGGING -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
 
         <dependency>
