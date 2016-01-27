@@ -15,8 +15,10 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <testng.version>6.9.10</testng.version>
-        <slf4j.version>1.7.14</slf4j.version>
+        <version.testng>6.9.10</version.testng>
+        <version.jmockit>1.21</version.jmockit>
+        <version.mockito>1.10.19</version.mockito>
+        <version.slf4j>1.7.14</version.slf4j>
     </properties>
 
     <dependencies>
@@ -24,13 +26,19 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>${testng.version}</version>
+            <version>${version.testng}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jmockit</groupId>
+            <artifactId>jmockit</artifactId>
+            <version>${version.jmockit}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
-            <version>1.9.5</version>
+            <version>${version.mockito}</version>
             <scope>test</scope>
         </dependency>
 
@@ -38,7 +46,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
+            <version>${version.slf4j}</version>
         </dependency>
 
         <dependency>
@@ -78,6 +86,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.19</version>
             </plugin>
+            <!-- package -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
