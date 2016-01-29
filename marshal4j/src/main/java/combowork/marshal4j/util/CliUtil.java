@@ -5,18 +5,22 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CliUtil {
 
-    private final static String VARS_DIR_SWITCH = "in";
-    private final static String COMBINE_DIR_SWITCH = "combine";
-    private final static String MARSHAL4J_DIR_SWITCH = "marshal4j";
+    private final static Logger LOGGER = LoggerFactory.getLogger(CliUtil.class);
+
+    private final static String SWITCH_BASE_DIR = "base";
+    private final static String SWITCH_COMBINE_DIR = "combine";
+    private final static String SWITCH_MARSHAL4J_DIR = "marshal4j";
 
     public static Config parseCli(String[] args) {
         Options options = new Options();
-        options.addOption(VARS_DIR_SWITCH, true, "base dir");
-        options.addOption(COMBINE_DIR_SWITCH, true, "combine output dir");
-        options.addOption(MARSHAL4J_DIR_SWITCH, true, "marshal4j output dir");
+        options.addOption(SWITCH_BASE_DIR, true, "base dir");
+        options.addOption(SWITCH_COMBINE_DIR, true, "combine dir");
+        options.addOption(SWITCH_MARSHAL4J_DIR, true, "marshal4j dir");
 
         CommandLineParser commandLineParser = new PosixParser();
 
@@ -24,19 +28,21 @@ public class CliUtil {
         try {
             commandLine = commandLineParser.parse(options, args);
         } catch (ParseException e) {
-            e.printStackTrace();
+            String err = "Unable to parse commands";
+            LOGGER.error(err, e);
+            System.out.println(err);
             System.exit(1);
         }
 
         Config config = new Config();
-        if (commandLine.hasOption(VARS_DIR_SWITCH)) {
-            config.setBaseDir(commandLine.getOptionValue(VARS_DIR_SWITCH));
+        if (commandLine.hasOption(SWITCH_BASE_DIR)) {
+            config.setBaseDir(commandLine.getOptionValue(SWITCH_BASE_DIR));
         }
-        if (commandLine.hasOption(COMBINE_DIR_SWITCH)) {
-            config.setCombineDir(commandLine.getOptionValue(COMBINE_DIR_SWITCH));
+        if (commandLine.hasOption(SWITCH_COMBINE_DIR)) {
+            config.setCombineDir(commandLine.getOptionValue(SWITCH_COMBINE_DIR));
         }
-        if (commandLine.hasOption(MARSHAL4J_DIR_SWITCH)) {
-            config.setMarshal4jDir(commandLine.getOptionValue(MARSHAL4J_DIR_SWITCH));
+        if (commandLine.hasOption(SWITCH_MARSHAL4J_DIR)) {
+            config.setMarshal4jDir(commandLine.getOptionValue(SWITCH_MARSHAL4J_DIR));
         }
 
         return config;
@@ -45,8 +51,8 @@ public class CliUtil {
     public static class Config {
 
         private String baseDir = ".";
-        private String combineDir = "./combine";
-        private String marshal4jDir = "./marshal4j";
+        private String combineDir = "combine";
+        private String marshal4jDir = "marshal4j";
 
         public String getBaseDir() {
             return baseDir;
@@ -70,6 +76,14 @@ public class CliUtil {
 
         public void setMarshal4jDir(String marshal4jDir) {
             this.marshal4jDir = marshal4jDir;
+        }
+
+        public String getPathToCombine() {
+            return baseDir + "/" + combineDir;
+        }
+
+        public String getPathToMarshal4j() {
+            return baseDir + "/" + marshal4jDir;
         }
     }
 }

@@ -11,8 +11,10 @@ public class CliUtilTest {
         CliUtil.Config config = CliUtil.parseCli(args);
 
         Assert.assertEquals(config.getBaseDir(), ".");
-        Assert.assertEquals(config.getCombineDir(), "./combine");
-        Assert.assertEquals(config.getMarshal4jDir(), "./marshal4j");
+        Assert.assertEquals(config.getCombineDir(), "combine");
+        Assert.assertEquals(config.getMarshal4jDir(), "marshal4j");
+        Assert.assertEquals(config.getPathToCombine(), "./combine");
+        Assert.assertEquals(config.getPathToMarshal4j(), "./marshal4j");
     }
 
     @Test
@@ -21,17 +23,21 @@ public class CliUtilTest {
         CliUtil.Config config = CliUtil.parseCli(args);
 
         Assert.assertEquals(config.getBaseDir(), ".");
-        Assert.assertEquals(config.getCombineDir(), "./combine");
-        Assert.assertEquals(config.getMarshal4jDir(), "./marshal4j");
+        Assert.assertEquals(config.getCombineDir(), "combine");
+        Assert.assertEquals(config.getMarshal4jDir(), "marshal4j");
+        Assert.assertEquals(config.getPathToCombine(), "./combine");
+        Assert.assertEquals(config.getPathToMarshal4j(), "./marshal4j");
     }
 
     @Test
     public void shouldOverrideDefaultValues() {
-        String[] args = {"--in", "/base", "--combine", "/base/combine", "--marshal4j", "/base/marshal4j"};
+        String[] args = {"--base", "/base", "--combine", "combine2", "--marshal4j", "marshal4j2"};
         CliUtil.Config config = CliUtil.parseCli(args);
 
         Assert.assertEquals(config.getBaseDir(), "/base");
-        Assert.assertEquals(config.getCombineDir(), "/base/combine");
-        Assert.assertEquals(config.getMarshal4jDir(), "/base/marshal4j");
+        Assert.assertEquals(config.getCombineDir(), "combine2");
+        Assert.assertEquals(config.getMarshal4jDir(), "marshal4j2");
+        Assert.assertEquals(config.getPathToCombine(), "/base/combine2");
+        Assert.assertEquals(config.getPathToMarshal4j(), "/base/marshal4j2");
     }
 }
