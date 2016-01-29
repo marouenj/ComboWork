@@ -13,7 +13,7 @@ import java.util.List;
 
 public class FileUtilTest {
 
-    private final static String DUMMY = "";
+    private final static String DUMMY_STRING = "";
 
     @BeforeClass
     public void init() {
@@ -23,7 +23,7 @@ public class FileUtilTest {
     /**
      * Should throw an exception when config is null
      */
-    @Test(expectedExceptions = RuntimeException.class, expectedExceptionsMessageRegExp = "Config file descriptor is null")
+    @Test(expectedExceptions = RuntimeException.class, expectedExceptionsMessageRegExp = "Config is null")
     public void shouldThrowExceptionWhenConfigIsNull() {
         FileUtil.getListOfVars(null);
     }
@@ -36,7 +36,7 @@ public class FileUtilTest {
         new MockUp<CliUtil.Config>() {
             @mockit.Mock
             public String getBaseDir() {
-                return DUMMY;
+                return DUMMY_STRING;
             }
         };
 
@@ -58,18 +58,19 @@ public class FileUtilTest {
         new MockUp<CliUtil.Config>() {
             @mockit.Mock
             public String getBaseDir() {
-                return DUMMY;
+                return DUMMY_STRING;
             }
         };
 
         new MockUp<File>() {
-            int callNumber = 0;
-            final int fileNumber = 10;
+            final int numberOfFiles = 10;
+
+            int isDirectoryCallNumber = 0;
 
             @mockit.Mock
             public boolean isDirectory() {
-                callNumber++;
-                if (callNumber < 1 + fileNumber + 1) {
+                isDirectoryCallNumber++;
+                if (isDirectoryCallNumber < 1 + numberOfFiles + 1) {
                     return true;
                 }
                 throw new RuntimeException("isDirectory called more than the expected number of times");
@@ -77,9 +78,9 @@ public class FileUtilTest {
 
             @mockit.Mock
             public File[] listFiles() {
-                File[] files = new File[fileNumber];
+                File[] files = new File[numberOfFiles];
                 for (int i = 0; i < files.length; i++) {
-                    files[i] = new File(DUMMY);
+                    files[i] = new File(DUMMY_STRING);
                 }
                 return files;
             }
@@ -103,7 +104,7 @@ public class FileUtilTest {
         new MockUp<CliUtil.Config>() {
             @mockit.Mock
             public String getBaseDir() {
-                return DUMMY;
+                return DUMMY_STRING;
             }
         };
 
@@ -111,14 +112,14 @@ public class FileUtilTest {
             final int numberOfFiles = 10;
             final String fileName = "no_json.txt";
 
-            int callNumber = 0;
+            int isDirectoryCallNumber = 0;
 
             @mockit.Mock
             public boolean isDirectory() {
-                callNumber++;
-                if (callNumber == 1) {
+                isDirectoryCallNumber++;
+                if (isDirectoryCallNumber == 1) {
                     return true;
-                } else if (callNumber < 1 + numberOfFiles + 1) {
+                } else if (isDirectoryCallNumber < 1 + numberOfFiles + 1) {
                     return false;
                 }
                 throw new RuntimeException("isDirectory called more than the expected number of times");
@@ -128,7 +129,7 @@ public class FileUtilTest {
             public File[] listFiles() {
                 File[] files = new File[numberOfFiles];
                 for (int i = 0; i < files.length; i++) {
-                    files[i] = new File(DUMMY);
+                    files[i] = new File(DUMMY_STRING);
                 }
                 return files;
             }
@@ -181,17 +182,18 @@ public class FileUtilTest {
         new MockUp<CliUtil.Config>() {
             @mockit.Mock
             public String getBaseDir() {
-                return DUMMY;
+                return DUMMY_STRING;
             }
 
             @mockit.Mock
             public String getCombineDir() {
-                return DUMMY;
+                return DUMMY_STRING;
             }
         };
 
         new MockUp<File>() {
             final int numberOfFiles = fileNames.size();
+
             int isDirectoryCallNumber = 0;
             int getNameCallNumber = 0;
 
@@ -210,7 +212,7 @@ public class FileUtilTest {
             public File[] listFiles() {
                 File[] files = new File[numberOfFiles];
                 for (int i = 0; i < files.length; i++) {
-                    files[i] = new File(DUMMY);
+                    files[i] = new File(DUMMY_STRING);
                 }
                 return files;
             }

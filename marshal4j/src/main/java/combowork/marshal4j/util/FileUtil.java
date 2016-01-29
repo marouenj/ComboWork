@@ -16,36 +16,50 @@ public class FileUtil {
 
     public static Iterator<String> getListOfVars(CliUtil.Config config) {
         if (config == null) {
-            LOGGER.error("Config file descriptor is null");
-            throw new RuntimeException("Config file descriptor is null");
+            LOGGER.error(LogMessages.CONFIG_IS_NULL.getText());
+            throw new RuntimeException(LogMessages.CONFIG_IS_NULL.getText());
         }
-
-        ArrayList<String> listOfVars = new ArrayList<>();
 
         File baseDir = new File(config.getBaseDir());
         if (!baseDir.isDirectory()) {
-            LOGGER.error("Base dir should be a dir, not a file");
-            throw new RuntimeException("Base dir should be a dir, not a file");
+            LOGGER.error(LogMessages.BASE_DIR_IS_A_FILE.getText());
+            throw new RuntimeException(LogMessages.BASE_DIR_IS_A_FILE.getText());
         }
 
-        for (File vars : baseDir.listFiles()) {
+        ArrayList<String> listOfVars = new ArrayList<>();
+        for (File var : baseDir.listFiles()) {
             // skip nested dir
-            if (vars.isDirectory()) {
+            if (var.isDirectory()) {
                 continue;
             }
 
             // skip non-json files
-            if (!vars.getName().endsWith(".json")) {
+            if (!var.getName().endsWith(".json")) {
                 continue;
             }
 
-            String valsPath = config.getCombineDir() + "/" + vars.getName() + ".combine";
-            File vals = new File(valsPath);
-            if (vals.exists() && vals.isFile()) {
-                listOfVars.add(vars.getName());
+            String pathToVal = config.getPathToCombine() + "/" + var.getName();
+            File val = new File(pathToVal);
+            if (val.exists() && val.isFile()) {
+                listOfVars.add(var.getName());
             }
         }
 
         return listOfVars.iterator();
+    }
+
+    private enum LogMessages {
+        CONFIG_IS_NULL ("Config is null"),
+        BASE_DIR_IS_A_FILE ("Base dir should be a dir, not a file");
+
+        private final String msg;
+
+        LogMessages(String msg) {
+            this.msg = msg;
+        }
+
+        public String getText() {
+            return msg;
+        }
     }
 }
