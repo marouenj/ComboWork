@@ -28,10 +28,8 @@ public class CliUtil {
         try {
             commandLine = commandLineParser.parse(options, args);
         } catch (ParseException e) {
-            String err = "Unable to parse commands";
-            LOGGER.error(err, e);
-            System.out.println(err);
-            System.exit(1);
+            LOGGER.error(LogMessages.UNABLE_TO_PARSE.getText());
+            throw new RuntimeException(LogMessages.UNABLE_TO_PARSE.getText());
         }
 
         Config config = new Config();
@@ -85,5 +83,20 @@ public class CliUtil {
         public String getPathToMarshal4j() {
             return baseDir + "/" + marshal4jDir;
         }
+    }
+
+    private enum LogMessages {
+        UNABLE_TO_PARSE("Unable to parse commands");
+
+        private final String msg;
+
+        LogMessages(String msg) {
+            this.msg = msg;
+        }
+
+        public String getText() {
+            return msg;
+        }
+
     }
 }
