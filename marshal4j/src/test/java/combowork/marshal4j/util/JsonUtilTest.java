@@ -1,24 +1,12 @@
 package combowork.marshal4j.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import combowork.marshal4j.Base;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-
-public class JsonUtilTest {
-
-    private final static ObjectMapper MAPPER = new ObjectMapper();
-
-    private JsonNode fromString(String json) {
-        try {
-            return MAPPER.readTree(json);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-    }
+public class JsonUtilTest extends Base {
 
     @DataProvider(name = "validateVars")
     public Object[][] validateVars() {
