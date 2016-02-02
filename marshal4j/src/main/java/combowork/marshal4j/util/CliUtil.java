@@ -85,6 +85,9 @@ public class CliUtil {
         }
     }
 
+    /**
+     * Log messages for this class logger
+     */
     private enum LogMessages {
         UNABLE_TO_PARSE("Unable to parse commands");
 
