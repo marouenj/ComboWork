@@ -52,8 +52,8 @@ public class FileUtil {
      * Log messages for this class logger
      */
     private enum LogMessages {
-        CONFIG_IS_NULL ("Config is null"),
-        BASE_DIR_IS_A_FILE ("Base dir should be a dir, not a file");
+        CONFIG_IS_NULL("Config is null"),
+        BASE_DIR_IS_A_FILE("Base dir should be a dir, not a file");
 
         private final String msg;
 

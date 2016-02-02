@@ -100,6 +100,5 @@ public class CliUtil {
         public String getText() {
             return msg;
         }
-
     }
 }
