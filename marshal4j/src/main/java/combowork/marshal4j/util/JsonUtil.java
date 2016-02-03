@@ -176,6 +176,16 @@ public class JsonUtil {
         return true;
     }
 
+    public static String asText(JsonNode node, String key, String defaultVal) {
+        JsonNode val = node.get(key);
+
+        if (val == null) {
+            return defaultVal;
+        }
+
+        return val.asText();
+    }
+
     /**
      * Log messages for this class logger
      */
