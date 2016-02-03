@@ -1,12 +1,18 @@
 package combowork.marshal4j.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ReflectionUtil {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(ReflectionUtil.class);
 
     public static Class<?> classFrom(String name) {
         Class<?> clazz = null;
         try {
             clazz = Class.forName(name);
         } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e.getMessage());
         }
         return clazz;
     }
@@ -18,6 +24,7 @@ public class ReflectionUtil {
         try {
             obj = clazz.newInstance();
         } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(e.getMessage());
         }
         return obj;
     }
@@ -26,6 +33,7 @@ public class ReflectionUtil {
         try {
             parent.getClass().getMethod(method, paramTypes).invoke(parent, args);
         } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 }
