@@ -37,6 +37,7 @@ public class MarshallerTest extends Base {
                 "[{\"type\":\"long\"}]",
                 "[{\"type\":\"float\"}]",
                 "[{\"type\":\"double\"}]",
+                "[{\"type\":\"String\"}, {\"type\":\"boolean\"}, {\"type\":\"double\"}]",
         };
 
         String[] vals = new String[]{
@@ -58,6 +59,7 @@ public class MarshallerTest extends Base {
                 "[4]",
                 "[5.0]",
                 "[6.0]",
+                "[\"sample\", true, 1.0]",
         };
 
         // writeObject, writeBoolean, writeChar, writeByte, writeShort, writeInt, writeLong, writeFloat, writeDouble
@@ -80,6 +82,7 @@ public class MarshallerTest extends Base {
                 {0, 0, 0, 0, 0, 0, 1, 0, 0}, // long
                 {0, 0, 0, 0, 0, 0, 0, 1, 0}, // float
                 {0, 0, 0, 0, 0, 0, 0, 0, 1}, // double
+                {1, 1, 0, 0, 0, 0, 0, 0, 1}, // String, boolean, double
         };
 
         Object[][] data = new Object[vars.length][];
