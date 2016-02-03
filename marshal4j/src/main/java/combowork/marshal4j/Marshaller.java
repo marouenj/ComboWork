@@ -82,10 +82,10 @@ public class Marshaller {
     }
 
     private static void forEachVar(JsonNode vars, JsonNode testcase, ObjectOutput out) {
-        Iterator<JsonNode> itrVals = testcase.iterator();
+        Iterator<JsonNode> testCaseItr = testcase.iterator();
 
         for (JsonNode var : vars) {
-            if (var == null) { // TODO handle this as a bug. This is because the json structure is validated beforehand. If this does indeed occur, then the validation is not working properly
+            if (var == null) { // TODO is this needed?
                 continue;
             }
 
@@ -93,69 +93,73 @@ public class Marshaller {
             JsonNode suffix = var.get("suffix");
 
             if (prefix == null && suffix == null) { // primitive
+                JsonNode val = testCaseItr.next();
                 JsonNode type = var.get("type");
                 String typeAsText = "";
                 if (type != null) {
                     typeAsText = type.asText();
                 }
-                JsonNode val = itrVals.next();
                 try {
                     switch (typeAsText) {
-                        case "char":
-                            out.writeChar(val.asText().charAt(0));
-                            break;
-                        case "Character":
-                            out.writeObject((Character) val.asText().charAt(0));
-                            break;
+                        // objects
                         case "String":
                             out.writeObject(val.asText());
-                            break;
-                        case "boolean":
-                            out.writeBoolean(val.asBoolean());
                             break;
                         case "Boolean":
                             out.writeObject(val.asBoolean());
                             break;
-                        case "byte":
-                            out.writeByte((byte) val.asInt());
+                        case "Character":
+                            out.writeObject(val.asText().charAt(0));
                             break;
                         case "Byte":
-                            out.writeObject((Byte) ((byte) val.asInt()));
+                            out.writeObject((byte) val.asInt());
+                            break;
+                        case "Short":
+                            out.writeObject((short) val.asInt());
+                            break;
+                        case "Integer":
+                            out.writeObject(val.asInt());
+                            break;
+                        case "Long":
+                            out.writeObject(val.asLong());
+                            break;
+                        case "Float":
+                            out.writeObject((float) val.asDouble());
+                            break;
+                        case "Double":
+                            out.writeObject(val.asDouble());
+                            break;
+                        // primitives
+                        case "boolean":
+                            out.writeBoolean(val.asBoolean());
+                            break;
+                        case "char":
+                            out.writeChar(val.asText().charAt(0));
+                            break;
+                        case "byte":
+                            out.writeByte((byte) val.asInt());
                             break;
                         case "short":
                             out.writeShort((short) val.asInt());
                             break;
-                        case "Short":
-                            out.writeObject((Short) ((short) val.asInt()));
-                            break;
                         case "int":
                             out.writeInt(val.asInt());
-                            break;
-                        case "Integer":
-                            out.writeObject((Integer) val.asInt());
                             break;
                         case "long":
                             out.writeLong(val.asLong());
                             break;
-                        case "Long":
-                            out.writeObject((Long) val.asLong());
-                            break;
                         case "float":
                             out.writeFloat((float) val.asDouble());
-                            break;
-                        case "Float":
-                            out.writeObject((Float) ((float) val.asDouble()));
                             break;
                         case "double":
                             out.writeDouble(val.asDouble());
                             break;
-                        case "Double":
-                            out.writeObject((Double) val.asDouble());
-                            break;
                         default:
-                            out.writeObject((String) val.asText());
+                            out.writeObject(val.asText());
                     }
                 } catch (IOException e) {
+                    LOGGER.error(LogMessages.FILE_WRITE_UNABLE.getText());
+                    throw new RuntimeException(LogMessages.FILE_WRITE_UNABLE.getText());
                 }
             } else if (prefix != null && suffix != null) { // complex
                 JsonNode varsRec = var.get("vals");
@@ -166,8 +170,12 @@ public class Marshaller {
                 try {
                     out.writeObject(obj);
                 } catch (IOException e) {
+                    LOGGER.error(LogMessages.FILE_WRITE_UNABLE.getText());
+                    throw new RuntimeException(LogMessages.FILE_WRITE_UNABLE.getText());
                 }
             } else { // TODO undefined. Handle as bug
+                LOGGER.error(LogMessages.UNDEFINED_STATE_PREFIX_SUFFIX.getText());
+                throw new RuntimeException(LogMessages.UNDEFINED_STATE_PREFIX_SUFFIX.getText());
             }
         }
     }
@@ -179,7 +187,9 @@ public class Marshaller {
         VARS_LIST_NULL("list of vars paths is null"),
         VARS_NOT_VALID("vars not valid, "),
         VALS_NOT_VALID("vals not valid, "),
-        FILE_OPEN_UNABLE("unable to open file, ");
+        FILE_OPEN_UNABLE("unable to open file, "),
+        FILE_WRITE_UNABLE("unable to write to file"),
+        UNDEFINED_STATE_PREFIX_SUFFIX("undefined state: either 'prefix' or 'suffix' are null");
 
         private final String msg;
 
