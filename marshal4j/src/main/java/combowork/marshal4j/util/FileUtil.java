@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 
 /**
  * Utility class for the different operations on files and folders
@@ -14,7 +14,7 @@ public class FileUtil {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(FileUtil.class);
 
-    public static Iterator<String> getListOfVars(CliUtil.Config config) {
+    public static List<String> getListOfVars(CliUtil.Config config) {
         if (config == null) {
             LOGGER.error(LogMessages.CONFIG_IS_NULL.getText());
             throw new RuntimeException(LogMessages.CONFIG_IS_NULL.getText());
@@ -45,7 +45,7 @@ public class FileUtil {
             }
         }
 
-        return listOfVars.iterator();
+        return listOfVars;
     }
 
     /**

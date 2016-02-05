@@ -8,7 +8,6 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class FileUtilTest {
@@ -86,11 +85,11 @@ public class FileUtilTest {
             }
         };
 
-        Iterator<String> itr = FileUtil.getListOfVars(new CliUtil.Config());
+        List<String> listOfVars = FileUtil.getListOfVars(new CliUtil.Config());
 
         int i = 0;
-        for (; itr.hasNext(); ++i) {
-            itr.next();
+        for (String ignored : listOfVars) {
+            i++;
         }
 
         Assert.assertEquals(i, 0);
@@ -140,11 +139,11 @@ public class FileUtilTest {
             }
         };
 
-        Iterator<String> itr = FileUtil.getListOfVars(new CliUtil.Config());
+        List<String> listOfVars = FileUtil.getListOfVars(new CliUtil.Config());
 
         int i = 0;
-        for (; itr.hasNext(); ++i) {
-            itr.next();
+        for (String ignored : listOfVars) {
+            i++;
         }
 
         Assert.assertEquals(i, 0);
@@ -237,11 +236,11 @@ public class FileUtilTest {
             }
         };
 
-        Iterator<String> itr = FileUtil.getListOfVars(new CliUtil.Config());
+        List<String> listOfVars = FileUtil.getListOfVars(new CliUtil.Config());
 
         int actual = 0;
-        for (; itr.hasNext(); ++actual) {
-            itr.next();
+        for (String ignored : listOfVars) {
+            actual++;
         }
 
         int expected = fileNames.size();
