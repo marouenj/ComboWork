@@ -1,6 +1,7 @@
 package combowork.marshal4j;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeType;
 import combowork.marshal4j.util.CliUtil;
 import combowork.marshal4j.util.JsonUtil;
 import combowork.marshal4j.util.ReflectionUtil;
@@ -23,41 +24,41 @@ public class Marshaller {
      * Loop over the list of vars files.
      * For each iteration, loads vars file and vals file, opens output file.
      *
-     * @param varsPaths List of vars files.
+     * @param templates List of template paths
      * @param config    Config file
      */
-    public static void forEachFile(List<String> varsPaths, CliUtil.Config config) {
-        if (varsPaths == null) {
-            throw new NullPointerException(LogMessages.VARS_LIST_NULL.getText());
+    public static void forEachTemplate(List<String> templates, CliUtil.Config config) {
+        if (templates == null) {
+            throw new NullPointerException(LogMessages.TEMPLATE_LIST_NULL.getText());
         }
 
-        for (String varsPath : varsPaths) {
-            JsonNode vars = JsonUtil.read(config.getBaseDir() + "/" + varsPath);
+        for (String template : templates) {
+            JsonNode vars = JsonUtil.read(config.getBaseDir() + "/" + template);
             if (!JsonUtil.varsIsValid(vars)) {
-                LOGGER.error(LogMessages.VARS_NOT_VALID.getText(varsPath));
-                throw new RuntimeException(LogMessages.VARS_NOT_VALID.getText(varsPath));
+                LOGGER.error(LogMessages.VARS_NOT_VALID.getText(template));
+                throw new RuntimeException(LogMessages.VARS_NOT_VALID.getText(template));
             }
 
-            JsonNode vals = JsonUtil.read(config.getPathToCombine() + "/" + varsPath);
+            JsonNode vals = JsonUtil.read(config.getPathToCombine() + "/" + template);
             if (!JsonUtil.valsIsValid(vals)) {
-                LOGGER.error(LogMessages.VALS_NOT_VALID.getText(varsPath));
-                throw new RuntimeException(LogMessages.VALS_NOT_VALID.getText(varsPath));
+                LOGGER.error(LogMessages.VALS_NOT_VALID.getText(template));
+                throw new RuntimeException(LogMessages.VALS_NOT_VALID.getText(template));
             }
 
             FileOutputStream fout;
             try {
-                fout = new FileOutputStream(config.getPathToMarshal4j() + "/" + varsPath);
+                fout = new FileOutputStream(config.getPathToMarshal4j() + "/" + template);
             } catch (FileNotFoundException e) {
-                LOGGER.error(LogMessages.FILE_OPEN_UNABLE.getText(varsPath));
-                throw new RuntimeException(LogMessages.FILE_OPEN_UNABLE.getText(varsPath));
+                LOGGER.error(LogMessages.FILE_OPEN_UNABLE.getText(template));
+                throw new RuntimeException(LogMessages.FILE_OPEN_UNABLE.getText(template));
             }
 
             ObjectOutput out;
             try {
                 out = new ObjectOutputStream(fout);
             } catch (IOException e) {
-                LOGGER.error(LogMessages.FILE_OPEN_UNABLE.getText(varsPath));
-                throw new RuntimeException(LogMessages.FILE_OPEN_UNABLE.getText(varsPath));
+                LOGGER.error(LogMessages.FILE_OPEN_UNABLE.getText(template));
+                throw new RuntimeException(LogMessages.FILE_OPEN_UNABLE.getText(template));
             }
 
             forEachTestCase(vars, vals, out);
@@ -86,7 +87,7 @@ public class Marshaller {
 
         for (JsonNode var : vars) {
             if (var == null) { // TODO is this needed?
-                continue;
+                throw new RuntimeException(LogMessages.VAR_NULL.getText());
             }
 
             JsonNode prefix = var.get("prefix");
@@ -94,13 +95,9 @@ public class Marshaller {
 
             if (prefix == null && suffix == null) { // primitive
                 JsonNode val = testCaseItr.next();
-                JsonNode type = var.get("type");
-                String typeAsText = "";
-                if (type != null) {
-                    typeAsText = type.asText();
-                }
+                String type = JsonUtil.asText(var, "type", "");
                 try {
-                    switch (typeAsText) {
+                    switch (type) {
                         // objects
                         case "String":
                             out.writeObject(val.asText());
@@ -162,10 +159,9 @@ public class Marshaller {
                     throw new RuntimeException(LogMessages.FILE_WRITE_UNABLE.getText());
                 }
             } else if (prefix != null && suffix != null) { // complex
-                JsonNode varsRec = var.get("vals");
                 Object obj = ReflectionUtil.instanceFrom(prefix.asText() + "." + suffix.asText());
 
-//                parseVarsRec(varsRec, obj, itrVals);
+                forEachValObject(var.get("vals"), testCaseItr, obj);
 
                 try {
                     out.writeObject(obj);
@@ -180,16 +176,120 @@ public class Marshaller {
         }
     }
 
+    private static void forEachValObject(JsonNode vals, Iterator<JsonNode> testCaseItr, Object obj) {
+        for (JsonNode var : vals) {
+            if (var.getNodeType() != JsonNodeType.OBJECT) { // TODO handle as bug. Structure should be validated beforehand
+                continue;
+            }
+
+            String prefix = JsonUtil.asText(var, "prefix", null);
+            String suffix = JsonUtil.asText(var, "suffix", null);
+            String setter = JsonUtil.asText(var, "setter", null);
+            String type = JsonUtil.asText(var, "type", "");
+
+            if (prefix == null && suffix == null) { // primitive
+                if (setter == null) { // TODO handle as template is not valid
+                    throw new RuntimeException();
+                }
+
+                JsonNode val = testCaseItr.next();
+
+                Class<?>[] argsType = new Class<?>[1];
+                Object[] args = new Object[1];
+
+                switch (type) {
+                    // objects
+                    case "String":
+                        argsType[0] = java.lang.String.class;
+                        args[0] = val.asText();
+                        break;
+                    case "Boolean":
+                        argsType[0] = java.lang.Boolean.class;
+                        args[0] = val.asBoolean();
+                        break;
+                    case "Character":
+                        argsType[0] = java.lang.Character.class;
+                        args[0] = val.asText().charAt(0);
+                        break;
+                    case "Byte":
+                        argsType[0] = java.lang.Byte.class;
+                        args[0] = (byte) val.asInt();
+                        break;
+                    case "Short":
+                        argsType[0] = java.lang.Short.class;
+                        args[0] = (short) val.asInt();
+                        break;
+                    case "Integer":
+                        argsType[0] = java.lang.Integer.class;
+                        args[0] = val.asInt();
+                        break;
+                    case "Long":
+                        argsType[0] = java.lang.Long.class;
+                        args[0] = val.asLong();
+                        break;
+                    case "Float":
+                        argsType[0] = java.lang.Float.class;
+                        args[0] = (float) val.asDouble();
+                        break;
+                    case "Double":
+                        argsType[0] = java.lang.Double.class;
+                        args[0] = val.asDouble();
+                        break;
+                    // primitives
+                    case "boolean":
+                        argsType[0] = boolean.class;
+                        args[0] = val.asBoolean();
+                        break;
+                    case "char":
+                        argsType[0] = char.class;
+                        args[0] = val.asText().charAt(0);
+                        break;
+                    case "byte":
+                        argsType[0] = byte.class;
+                        args[0] = (byte) val.asInt();
+                        break;
+                    case "short":
+                        argsType[0] = short.class;
+                        args[0] = (short) val.asInt();
+                        break;
+                    case "int":
+                        argsType[0] = int.class;
+                        args[0] = val.asInt();
+                        break;
+                    case "long":
+                        argsType[0] = long.class;
+                        args[0] = val.asLong();
+                        break;
+                    case "float":
+                        argsType[0] = float.class;
+                        args[0] = (float) val.asDouble();
+                        break;
+                    case "double":
+                        argsType[0] = double.class;
+                        args[0] = val.asDouble();
+                        break;
+                }
+
+                ReflectionUtil.invokeMethod(obj, setter, argsType, args);
+            } else if (prefix != null && suffix != null) { // complex
+            } else { // TODO undefined. Handle as bug
+                LOGGER.error(LogMessages.UNDEFINED_STATE_PREFIX_SUFFIX.getText());
+                throw new RuntimeException(LogMessages.UNDEFINED_STATE_PREFIX_SUFFIX.getText());
+            }
+        }
+    }
+
     /**
      * Log messages for this class logger
      */
     private enum LogMessages {
-        VARS_LIST_NULL("list of vars paths is null"),
+        TEMPLATE_LIST_NULL("list of vars paths is null"),
         VARS_NOT_VALID("vars not valid, "),
         VALS_NOT_VALID("vals not valid, "),
         FILE_OPEN_UNABLE("unable to open file, "),
         FILE_WRITE_UNABLE("unable to write to file"),
-        UNDEFINED_STATE_PREFIX_SUFFIX("undefined state: either 'prefix' or 'suffix' are null");
+        UNDEFINED_STATE_PREFIX_SUFFIX("undefined state: either 'prefix' or 'suffix' are null"),
+        VAR_NULL("var element is null");
 
         private final String msg;
 

@@ -116,4 +116,37 @@ public class MarshallerTest extends Base {
         verify(out, times(expected[7])).writeFloat(any(Float.class));
         verify(out, times(expected[8])).writeDouble(any(Double.class));
     }
+
+    @DataProvider(name = "nestedPrimitives")
+    public Object[][] nestedPrimitives() {
+        String[] vars = new String[]{
+                "[{\"type\":\"String\"},{\"prefix\":\"java.util\", \"suffix\":\"Date\", \"vals\":[{\"type\":\"int\", \"setter\": \"setYear\"}]}]",
+                "[{\"type\":\"String\"},{\"prefix\":\"java.util\", \"suffix\":\"Date\", \"vals\":[{\"type\":\"int\", \"setter\": \"setYear\"}, {\"type\":\"int\", \"setter\": \"setMonth\"}, {\"type\":\"int\", \"setter\": \"setDate\"}]}]",
+        };
+
+        String[] vals = new String[]{
+                "[\"sample\",2015]",
+                "[\"sample\",2015,10,5]",
+        };
+
+        // writeObject, writeBoolean, writeChar, writeByte, writeShort, writeInt, writeLong, writeFloat, writeDouble
+        Integer[][] expected = new Integer[][]{
+                {2, 0, 0, 0, 0, 0, 0, 0, 0}, // String, Date->year
+                {2, 0, 0, 0, 0, 0, 0, 0, 0}, // String, Date->(year,month,day)
+        };
+
+        Object[][] data = new Object[vars.length][];
+
+        for (int i = 0; i < vars.length; i++) {
+            Object[] json = {vars[i], vals[i]};
+            data[i] = new Object[]{json, expected[i]};
+        }
+
+        return data;
+    }
+
+    @Test(dataProvider = "nestedPrimitives")
+    public void nestedPrimitives(Object[] json, Integer[] expected) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+        this.levelOnePrimitives(json, expected);
+    }
 }
