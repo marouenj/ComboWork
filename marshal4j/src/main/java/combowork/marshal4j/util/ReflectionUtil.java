@@ -3,7 +3,7 @@ package combowork.marshal4j.util;
 public class ReflectionUtil {
 
     public static Class<?> classFrom(String name) {
-        Class<?> clazz = null;
+        Class<?> clazz;
         try {
             clazz = Class.forName(name);
         } catch (ClassNotFoundException e) {
@@ -15,7 +15,7 @@ public class ReflectionUtil {
     public static Object instanceFrom(String name) {
         Class<?> clazz = classFrom(name);
 
-        Object obj = null;
+        Object obj;
         try {
             obj = clazz.newInstance();
         } catch (ReflectiveOperationException e) {
