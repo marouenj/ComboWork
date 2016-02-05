@@ -122,17 +122,23 @@ public class MarshallerTest extends Base {
         String[] vars = new String[]{
                 "[{\"type\":\"String\"},{\"prefix\":\"java.util\", \"suffix\":\"Date\", \"vals\":[{\"type\":\"int\", \"setter\": \"setYear\"}]}]",
                 "[{\"type\":\"String\"},{\"prefix\":\"java.util\", \"suffix\":\"Date\", \"vals\":[{\"type\":\"int\", \"setter\": \"setYear\"}, {\"type\":\"int\", \"setter\": \"setMonth\"}, {\"type\":\"int\", \"setter\": \"setDate\"}]}]",
+                "[{\"prefix\":\"combowork.marshal4j\",\"suffix\":\"Base$Top\",\"vals\":[{\"type\":\"Boolean\",\"setter\":\"setB\"},{\"prefix\":\"combowork.marshal4j\",\"suffix\":\"Base$Middle\",\"setter\":\"setM\",\"vals\":[{\"type\":\"Integer\",\"setter\":\"setI\"},{\"prefix\":\"combowork.marshal4j\",\"suffix\":\"Base$Bottom\",\"setter\":\"setB\",\"vals\":[{\"type\":\"int\",\"setter\":\"setI\"},{\"type\":\"char\",\"setter\":\"setC\"},{\"type\":\"String\",\"setter\":\"setS\"}]}]}]}]",
+                "[{\"type\":\"String\"},{\"type\":\"double\"},{\"prefix\":\"combowork.marshal4j\",\"suffix\":\"Base$Top\",\"vals\":[{\"type\":\"Boolean\",\"setter\":\"setB\"},{\"prefix\":\"combowork.marshal4j\",\"suffix\":\"Base$Middle\",\"setter\":\"setM\",\"vals\":[{\"type\":\"Integer\",\"setter\":\"setI\"},{\"prefix\":\"combowork.marshal4j\",\"suffix\":\"Base$Bottom\",\"setter\":\"setB\",\"vals\":[{\"type\":\"int\",\"setter\":\"setI\"},{\"type\":\"char\",\"setter\":\"setC\"},{\"type\":\"String\",\"setter\":\"setS\"}]}]}]}]",
         };
 
         String[] vals = new String[]{
                 "[\"sample\",2015]",
                 "[\"sample\",2015,10,5]",
+                "[true,1,2,\"c\",\"str\"]",
+                "[\"str\",10.0,true,1,2,\"c\",\"str\"]",
         };
 
         // writeObject, writeBoolean, writeChar, writeByte, writeShort, writeInt, writeLong, writeFloat, writeDouble
         Integer[][] expected = new Integer[][]{
                 {2, 0, 0, 0, 0, 0, 0, 0, 0}, // String, Date->year
                 {2, 0, 0, 0, 0, 0, 0, 0, 0}, // String, Date->(year,month,day)
+                {1, 0, 0, 0, 0, 0, 0, 0, 0}, // Top->(Boolean,Middle->(Integer,Bottom->(int,char,String)))
+                {2, 0, 0, 0, 0, 0, 0, 0, 1}, // String, double, Top->(Boolean,Middle->(Integer,Bottom->(int,char,String)))
         };
 
         Object[][] data = new Object[vars.length][];

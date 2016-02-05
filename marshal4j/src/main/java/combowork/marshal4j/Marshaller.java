@@ -187,11 +187,11 @@ public class Marshaller {
             String setter = JsonUtil.asText(var, "setter", null);
             String type = JsonUtil.asText(var, "type", "");
 
-            if (prefix == null && suffix == null) { // primitive
-                if (setter == null) { // TODO handle as template is not valid
-                    throw new RuntimeException();
-                }
+            if (setter == null) { // TODO handle as template is not valid
+                throw new RuntimeException();
+            }
 
+            if (prefix == null && suffix == null) { // primitive
                 JsonNode val = testCaseItr.next();
 
                 Class<?>[] argsType = new Class<?>[1];
@@ -272,6 +272,17 @@ public class Marshaller {
 
                 ReflectionUtil.invokeMethod(obj, setter, argsType, args);
             } else if (prefix != null && suffix != null) { // complex
+                String clazz = prefix + "." + suffix;
+
+                Class<?>[] argsType = new Class<?>[1];
+                argsType[0] = ReflectionUtil.classFrom(clazz);
+
+                Object[] args = new Object[1];
+                args[0] = ReflectionUtil.instanceFrom(clazz);
+
+                ReflectionUtil.invokeMethod(obj, setter, argsType, args);
+
+                forEachValObject(var.get("vals"), testCaseItr, args[0]);
             } else { // TODO undefined. Handle as bug
                 LOGGER.error(LogMessages.UNDEFINED_STATE_PREFIX_SUFFIX.getText());
                 throw new RuntimeException(LogMessages.UNDEFINED_STATE_PREFIX_SUFFIX.getText());
