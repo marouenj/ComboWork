@@ -1,11 +1,6 @@
 package combowork.marshal4j.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class ReflectionUtil {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(ReflectionUtil.class);
 
     public static Class<?> classFrom(String name) {
         Class<?> clazz = null;
