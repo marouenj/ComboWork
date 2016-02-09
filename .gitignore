@@ -1,5 +1,5 @@
 \.vagrant/
 combine/bin/
 combine/pkg/
-marshal4j/\.idea/
-marshal4j/target/
+lang/java/marshal4j/.idea/
+lang/java/marshal4j/target/
