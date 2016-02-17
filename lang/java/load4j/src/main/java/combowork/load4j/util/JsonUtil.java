@@ -47,7 +47,6 @@ public class JsonUtil {
 
     public static JsonNode fromFile(String path) {
         String text;
-
         try {
             text = IOUtils.toString(new FileReader(path));
         } catch (IOException e) {
