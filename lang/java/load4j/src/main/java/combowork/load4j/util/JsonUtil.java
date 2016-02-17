@@ -2,6 +2,7 @@ package combowork.load4j.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeType;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,5 +72,17 @@ public class JsonUtil {
         }
 
         return tree;
+    }
+
+    public static boolean isValid(JsonNode root) {
+        if (root == null) {
+            return false;
+        }
+
+        if (root.getNodeType() != JsonNodeType.ARRAY) { // root should start with an array of objects
+            return false;
+        }
+
+        return true;
     }
 }
