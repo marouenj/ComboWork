@@ -2,6 +2,7 @@ package combowork.load4j.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -15,8 +16,16 @@ import java.lang.reflect.Method;
  */
 public class JsonUtilTest {
 
+    private static Method fromText;
+
+    @BeforeClass
+    public void init() throws NoSuchMethodException {
+        fromText = JsonUtil.class.getDeclaredMethod("fromText", String.class, String.class);
+        fromText.setAccessible(true);
+    }
+
     @DataProvider(name = "isValid")
-    public Object[][] isValid() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public Object[][] isValid() throws InvocationTargetException, IllegalAccessException {
         String[] json = new String[]{
                 "{}",
                 "[]",
@@ -48,12 +57,8 @@ public class JsonUtilTest {
         };
 
         Object[][] data = new Object[json.length][];
-
-        Method method = JsonUtil.class.getDeclaredMethod("fromText", String.class, String.class);
-        method.setAccessible(true);
-
         for (int i = 0; i < data.length; i++) {
-            data[i] = new Object[]{/*JsonUtil.fromText(json[i], null)*/method.invoke(null, json[i], null), expected[i]};
+            data[i] = new Object[]{fromText.invoke(null, json[i], null), expected[i]};
         }
 
         return data;
@@ -71,7 +76,7 @@ public class JsonUtilTest {
     }
 
     @DataProvider(name = "sizes")
-    public Object[][] sizes() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public Object[][] sizes() throws InvocationTargetException, IllegalAccessException {
         String[] json = new String[]{
                 "[{\"Case\":[\"string\"]}]",
                 "[{\"Case\":[\"string\", 5]}]",
@@ -86,12 +91,9 @@ public class JsonUtilTest {
                 new Integer[]{2, 2},
         };
 
-        Method method = JsonUtil.class.getDeclaredMethod("fromText", String.class, String.class);
-        method.setAccessible(true);
-
         Object[][] data = new Object[json.length][];
         for (int i = 0; i < data.length; i++) {
-            data[i] = new Object[]{method.invoke(null, json[i], null), expected[i]};
+            data[i] = new Object[]{fromText.invoke(null, json[i], null), expected[i]};
         }
 
         return data;
