@@ -30,8 +30,7 @@ public class JsonUtil {
     private enum LogMessages {
         UNABLE_TO_OPEN_FILE("Unable to open file, %s"),
         UNABLE_TO_CONVERT_STREAM_TO_STRING("Unable to convert Stream to String in, %s"),
-        UNABLE_TO_PARSE_JSON("Unable to parse json tree. Json file is, %s"),
-        INVALID_TEST_CASES("Test cases are invalid");
+        UNABLE_TO_PARSE_JSON("Unable to parse json tree. Json file is, %s");
 
         private final String text;
 
@@ -69,7 +68,7 @@ public class JsonUtil {
         return fromText(text, path);
     }
 
-    public static JsonNode fromText(String text, String path) {
+    private static JsonNode fromText(String text, String path) {
         JsonNode tree;
         try {
             tree = MAPPER.readTree(text);
@@ -93,7 +92,7 @@ public class JsonUtil {
 
         List<JsonNodeType> pattern;
         try {
-            pattern = pattern(testcases.get(0).get(VALS_KEY));
+            pattern = pattern(testcases.get(0));
         } catch (RuntimeException e) {
             return false;
         }
@@ -104,8 +103,7 @@ public class JsonUtil {
             }
 
             JsonNode vals = testcase.get(VALS_KEY);
-
-            if (vals.size() != pattern.size()) {
+            if (vals == null || vals.size() != pattern.size()) {
                 return false;
             }
 
@@ -121,20 +119,25 @@ public class JsonUtil {
         return true;
     }
 
-    private static ArrayList<JsonNodeType> pattern(JsonNode testcase) {
-        ArrayList<JsonNodeType> pattern = new ArrayList<>(testcase.size());
-
-        if (testcase.size() == 0) {
-            throw new RuntimeException(LogMessages.INVALID_TEST_CASES.getText());
+    private static ArrayList<JsonNodeType> pattern(JsonNode first) {
+        if (first.getNodeType() != JsonNodeType.OBJECT) {
+            throw new RuntimeException();
         }
 
-        for (JsonNode val : testcase) {
+        JsonNode vals = first.get(VALS_KEY);
+        if (vals == null || vals.size() == 0) {
+            throw new RuntimeException();
+        }
+
+        ArrayList<JsonNodeType> pattern = new ArrayList<>(vals.size());
+
+        for (JsonNode val : vals) {
             if (val.getNodeType() == JsonNodeType.BOOLEAN
                     || val.getNodeType() == JsonNodeType.NUMBER
                     || val.getNodeType() == JsonNodeType.STRING) {
                 pattern.add(val.getNodeType());
             } else {
-                throw new RuntimeException(LogMessages.INVALID_TEST_CASES.getText());
+                throw new RuntimeException();
             }
         }
 
