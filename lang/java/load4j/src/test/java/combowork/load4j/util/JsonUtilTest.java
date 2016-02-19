@@ -5,6 +5,9 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 /**
  * Test for {@link JsonUtil}
  *
@@ -13,7 +16,7 @@ import org.testng.annotations.Test;
 public class JsonUtilTest {
 
     @DataProvider(name = "isValid")
-    public Object[][] isValid() {
+    public Object[][] isValid() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         String[] json = new String[]{
                 "{}",
                 "[]",
@@ -46,8 +49,11 @@ public class JsonUtilTest {
 
         Object[][] data = new Object[json.length][];
 
+        Method method = JsonUtil.class.getDeclaredMethod("fromText", String.class, String.class);
+        method.setAccessible(true);
+
         for (int i = 0; i < data.length; i++) {
-            data[i] = new Object[]{JsonUtil.fromText(json[i], null), expected[i]};
+            data[i] = new Object[]{/*JsonUtil.fromText(json[i], null)*/method.invoke(null, json[i], null), expected[i]};
         }
 
         return data;
