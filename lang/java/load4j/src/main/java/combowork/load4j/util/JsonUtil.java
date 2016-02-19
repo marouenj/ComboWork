@@ -143,4 +143,12 @@ public class JsonUtil {
 
         return pattern;
     }
+
+    // TODO change to private
+    public static int[] sizes(JsonNode testCases) {
+        int tests = testCases.size();
+        int vals = testCases.get(0).get(VALS_KEY).size();
+
+        return new int[]{tests, vals};
+    }
 }
