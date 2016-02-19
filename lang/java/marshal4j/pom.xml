@@ -86,9 +86,23 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.19</version>
                 <configuration>
+                    <!--
+                    This should work irrespective of the JVM implementation Hotspot, OpenJDK, ...
+                    -->
                     <argLine>
-                        -javaagent:"/root/.m2/repository/org/jmockit/jmockit/1.21/jmockit-1.21.jar"
+                        -javaagent:"${user.home}/.m2/repository/org/jmockit/jmockit/1.21/jmockit-1.21.jar"
                     </argLine>
+                    <!--
+                    For Hotspot, an alternative is to specify the test listener mockit.integration.testng.internal.TestNGRunnerDecorator
+                    On Idea, this doesn't seem to be required
+                    TODO Check on CLI
+                    -->
+                    <!--<properties>-->
+                    <!--<property>-->
+                    <!--<name>listener</name>-->
+                    <!--<value>mockit.integration.testng.internal.TestNGRunnerDecorator</value>-->
+                    <!--</property>-->
+                    <!--</properties>-->
                 </configuration>
             </plugin>
             <!-- package -->
