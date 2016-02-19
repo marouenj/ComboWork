@@ -7,6 +7,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -49,10 +50,11 @@ public class JsonUtil {
 
     private final static ObjectMapper MAPPER = new ObjectMapper();
 
-    public static JsonNode fromFile(String path) {
+    public static JsonNode fromFile(File file) {
+        String path = file.getPath();
         String text;
         try {
-            text = IOUtils.toString(new FileReader(path));
+            text = IOUtils.toString(new FileReader(file));
         } catch (IOException e) {
             if (e instanceof FileNotFoundException) {
                 String msg = LogMessages.UNABLE_TO_OPEN_FILE.getText(path);

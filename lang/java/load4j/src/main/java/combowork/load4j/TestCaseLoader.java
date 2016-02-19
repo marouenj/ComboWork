@@ -3,11 +3,13 @@ package combowork.load4j;
 import com.fasterxml.jackson.databind.JsonNode;
 import combowork.load4j.util.JsonUtil;
 
+import java.io.File;
+
 public final class TestCaseLoader {
 
-    public static Object[][] testNgAdapter(String path) {
+    public static Object[][] testNgAdapter(File file) {
         try {
-            JsonNode testCases = JsonUtil.fromFile(path);
+            JsonNode testCases = JsonUtil.fromFile(file);
             if (!JsonUtil.isValid(testCases)) {
                 throw new RuntimeException();
             }
