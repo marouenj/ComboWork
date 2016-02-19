@@ -151,4 +151,65 @@ public class JsonUtil {
 
         return new int[]{tests, vals};
     }
+
+    public static Object[][] convertToObjectMatrix(JsonNode testCases) {
+        int[] sizes = sizes(testCases);
+        int nbreTestCases = sizes[0];
+        int nbreVals = sizes[1];
+
+        Object[][] view = new Object[nbreTestCases][nbreVals];
+
+        int i = -1;
+        for (JsonNode testCase : testCases) {
+            i++;
+            JsonNode vals = testCase.get(VALS_KEY);
+            int j = -1;
+            for (JsonNode val : vals) {
+                j++;
+                view[i][j] = jsonToJavaType(val);
+            }
+        }
+
+        return view;
+    }
+
+    private static Object jsonToJavaType(JsonNode node) {
+        // TODO what about byte?
+
+        if (node.isShort()) {
+            return (short) node.asInt();
+        }
+
+        if (node.isInt()) {
+            return node.asInt();
+        }
+
+        if (node.isLong()) {
+            return node.asLong();
+        }
+
+        if (node.isFloat()) {
+            return (float) node.asDouble();
+        }
+
+        if (node.isDouble()) {
+            return node.asDouble();
+        }
+
+        if (node.isBoolean()) {
+            return node.asBoolean();
+        }
+
+        if (node.isTextual()) {
+            return node.asText();
+        }
+
+        if (node.isNull()) {
+            return null;
+        }
+
+        // TODO what about null?
+
+        throw new RuntimeException();
+    }
 }
