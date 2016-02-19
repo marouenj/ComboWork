@@ -7,7 +7,7 @@
 
     <groupId>marouenj.combowork</groupId>
     <artifactId>load4j</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>load4j</name>
@@ -63,7 +63,7 @@
     </dependencies>
 
     <build>
-        <finalName>load4j</finalName>
+        <finalName>load4j-${project.version}</finalName>
         <plugins>
             <!-- compile/test-compile -->
             <plugin>
