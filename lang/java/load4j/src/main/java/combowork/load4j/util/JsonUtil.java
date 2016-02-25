@@ -112,6 +112,12 @@ public class JsonUtil {
             int i = -1;
             for (JsonNode val : vals) {
                 i++;
+
+                if (pattern.get(i) == JsonNodeType.NULL) { // hasn't encounter a deterministic value yet
+                    pattern.set(i, val.getNodeType());
+                    continue;
+                }
+
                 if (val.getNodeType() != pattern.get(i)) {
                     return false;
                 }
@@ -136,7 +142,8 @@ public class JsonUtil {
         for (JsonNode val : vals) {
             if (val.getNodeType() == JsonNodeType.BOOLEAN
                     || val.getNodeType() == JsonNodeType.NUMBER
-                    || val.getNodeType() == JsonNodeType.STRING) {
+                    || val.getNodeType() == JsonNodeType.STRING
+                    || val.getNodeType() == JsonNodeType.NULL) {
                 pattern.add(val.getNodeType());
             } else {
                 throw new RuntimeException();
@@ -144,14 +151,6 @@ public class JsonUtil {
         }
 
         return pattern;
-    }
-
-    // TODO change to private
-    public static int[] sizes(JsonNode testCases) {
-        int tests = testCases.size();
-        int vals = testCases.get(0).get(VALS_KEY).size();
-
-        return new int[]{tests, vals};
     }
 
     public static Object[][] convertToObjectMatrix(JsonNode testCases) {
@@ -175,27 +174,17 @@ public class JsonUtil {
         return view;
     }
 
+    // TODO change to private
+    public static int[] sizes(JsonNode testCases) {
+        int tests = testCases.size();
+        int vals = testCases.get(0).get(VALS_KEY).size();
+
+        return new int[]{tests, vals};
+    }
+
     private static Object jsonToJavaType(JsonNode node) {
-        // TODO what about byte?
-
-        if (node.isShort()) {
-            return (short) node.asInt();
-        }
-
-        if (node.isInt()) {
-            return node.asInt();
-        }
-
-        if (node.isLong()) {
-            return node.asLong();
-        }
-
-        if (node.isFloat()) {
-            return (float) node.asDouble();
-        }
-
-        if (node.isDouble()) {
-            return node.asDouble();
+        if (node.isNumber()) {
+            return node.numberValue();
         }
 
         if (node.isBoolean()) {
@@ -209,8 +198,6 @@ public class JsonUtil {
         if (node.isNull()) {
             return null;
         }
-
-        // TODO what about null?
 
         throw new RuntimeException();
     }
