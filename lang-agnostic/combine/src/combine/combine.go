@@ -13,6 +13,10 @@ import (
 	"testsuite"
 )
 
+const (
+	combined string = "combined"
+)
+
 type dirEnts []os.FileInfo
 
 // Implement the sort interface for dirEnts
@@ -29,8 +33,26 @@ func (d dirEnts) Swap(i, j int) {
 }
 
 func main() {
+	// parse args
 	in := flag.String("in", "./vars.json", "")
 	flag.Parse()
+
+	// check output dir exists or not
+	info, err := os.Stat(combined)
+	if err != nil {
+		if os.IsNotExist(err) {
+			err := os.Mkdir(combined, os.ModeDir|os.ModePerm)
+			if err != nil {
+				fmt.Printf("Error creating dir '%s': %s\n", combined, err)
+				os.Exit(1)
+			}
+		}
+	} else {
+		if !info.IsDir() {
+			fmt.Printf("'%s' exists as a file (not dir)\n", combined)
+			os.Exit(1)
+		}
+	}
 
 	// open file
 	f, err := os.Open(*in)
@@ -103,7 +125,7 @@ func forEachFile(subpath string, name string) error {
 
 	var tcase []byte = testsuite.GoCaseByCase(vals, bits)
 
-	out := filepath.Join(subpath, strings.Join([]string{name, "vals"}, "."))
+	out := filepath.Join(strings.Join([]string{subpath, combined, name}, "/"))
 	err = ioutil.WriteFile(out, tcase, 0666)
 	if err != nil {
 		return fmt.Errorf("Error writing '%s': %s", out, err)
