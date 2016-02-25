@@ -23,6 +23,8 @@ public class JsonUtil {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(JsonUtil.class);
 
+    private final static ObjectMapper MAPPER = new ObjectMapper();
+
     private final static String VALS_KEY = "Case";
 
     /**
@@ -47,8 +49,6 @@ public class JsonUtil {
             return String.format(getText(), vals);
         }
     }
-
-    private final static ObjectMapper MAPPER = new ObjectMapper();
 
     public static JsonNode fromFile(File file) {
         String path = file.getPath();
