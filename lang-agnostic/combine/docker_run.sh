@@ -1,11 +1,11 @@
 #!/bin/bash
 
-if [[ $1 == "stop"]];
+if [[ "$1" == "stop" ]];
 then
   docker rm -f combine
 fi
 
-if [[ $1 == "rm" ]];
+if [[ "$1" == "rm" ]];
 then
   docker rm combine
 fi
