@@ -27,7 +27,7 @@ public class PersonTest {
     @DataProvider(name = "isValid")
     public Object[][] isValid() {
         ClassLoader classLoader = getClass().getClassLoader();
-        URL resource = classLoader.getResource("isValid.json.vals");
+        URL resource = classLoader.getResource("combined/isValid.json");
         if (resource == null) {
             throw new NullPointerException();
         }
@@ -49,7 +49,7 @@ public class PersonTest {
     @DataProvider(name = "isUnvalid")
     public Object[][] isUnvalid() {
         ClassLoader classLoader = getClass().getClassLoader();
-        URL resource = classLoader.getResource("isUnvalid.json.vals");
+        URL resource = classLoader.getResource("combined/isUnvalid.json");
         if (resource == null) {
             throw new NullPointerException();
         }
