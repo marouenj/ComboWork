@@ -2,6 +2,7 @@ package combowork.expect4j.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeType;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Utility for {@link JsonNode}
@@ -78,7 +81,78 @@ public class JsonUtil {
         return tree;
     }
 
-    public static boolean isValid(JsonNode testcases) {
+    public static boolean isValid(JsonNode root) {
+        if (root == null || root.getNodeType() != JsonNodeType.OBJECT) {
+            return false;
+        }
+
+        JsonNode defaultVal = root.get("default");
+        if (defaultVal == null || defaultVal.getNodeType() != JsonNodeType.ARRAY || defaultVal.size() == 0) {
+            return false;
+        }
+
+        List<JsonNodeType> pattern;
+        try {
+            pattern = pattern(defaultVal);
+        } catch (RuntimeException e) {
+            return false;
+        }
+
+        JsonNode rules = root.get("override");
+        if (rules == null) {
+            return true;
+        }
+        if (rules.getNodeType() != JsonNodeType.ARRAY || rules.size() == 0) {
+            return false;
+        }
+
+        for (JsonNode rule : rules) {
+            if (rule.getNodeType() != JsonNodeType.OBJECT) {
+                return false;
+            }
+
+            JsonNode ruleVal = rule.get("rule");
+            if (ruleVal == null || ruleVal.getNodeType() != JsonNodeType.ARRAY || ruleVal.size() == 0) {
+                return false;
+            }
+
+            JsonNode actions = rule.get("action");
+            if (actions == null || actions.getNodeType() != JsonNodeType.ARRAY || actions.size() == 0 || actions.size() != pattern.size()) {
+                return false;
+            }
+
+            int i = -1;
+            for (JsonNode action : actions) {
+                i++;
+
+                if (pattern.get(i) == JsonNodeType.NULL) { // hasn't encountered a deterministic value yet
+                    pattern.set(i, action.getNodeType());
+                    continue;
+                }
+
+                if (action.getNodeType() != pattern.get(i)) {
+                    return false;
+                }
+            }
+        }
+
         return true;
+    }
+
+    private static ArrayList<JsonNodeType> pattern(JsonNode vals) {
+        ArrayList<JsonNodeType> pattern = new ArrayList<>(vals.size());
+
+        for (JsonNode val : vals) {
+            if (val.getNodeType() == JsonNodeType.BOOLEAN
+                    || val.getNodeType() == JsonNodeType.NUMBER
+                    || val.getNodeType() == JsonNodeType.STRING
+                    || val.getNodeType() == JsonNodeType.NULL) {
+                pattern.add(val.getNodeType());
+            } else {
+                throw new RuntimeException();
+            }
+        }
+
+        return pattern;
     }
 }
