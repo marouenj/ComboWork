@@ -155,4 +155,51 @@ public class JsonUtil {
 
         return pattern;
     }
+
+    /**
+     * Given a testcase, lookup the most matching rule and return the list of expected vals
+     *
+     * @param expect   expect4j config file
+     * @param testCase Array of vals representing a testcase
+     * @return Array of vals containing the list of expected vals
+     */
+    public static JsonNode lookUpRuleForTestcase(JsonNode expect, JsonNode testCase) {
+        JsonNode match = expect.get("default");
+        int closeness = 0;
+
+        JsonNode rules = expect.get("override");
+        if (rules == null) {
+            return match;
+        }
+
+        for (JsonNode rule : rules) {
+            JsonNode pattern = rule.get("rule");
+            JsonNode action = rule.get("action");
+
+            JsonNode matchCandidate = null;
+            int closenessCandidate = 0;
+
+            int i = -1;
+            for (JsonNode val : pattern) {
+                i++;
+                if (val.getNodeType() == JsonNodeType.OBJECT) {
+                    continue;
+                }
+                if (val.getNodeType() == testCase.get(i).getNodeType()) {
+                    matchCandidate = action;
+                    closenessCandidate++;
+                } else {
+                    closenessCandidate = 0;
+                    break;
+                }
+            }
+
+            if (closenessCandidate > closeness) {
+                match = matchCandidate;
+                closeness = closenessCandidate;
+            }
+        }
+
+        return match;
+    }
 }
