@@ -18,6 +18,7 @@
         <version.testng>6.9.10</version.testng>
         <version.jmockit>1.21</version.jmockit>
         <version.mockito>1.10.19</version.mockito>
+        <version.load4j>1.0.0-SNAPSHOT</version.load4j>
         <version.slf4j>1.7.14</version.slf4j>
     </properties>
 
@@ -39,6 +40,12 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <version>${version.mockito}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>marouenj.combowork</groupId>
+            <artifactId>load4j</artifactId>
+            <version>${version.load4j}</version>
             <scope>test</scope>
         </dependency>
 
@@ -109,4 +116,15 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>repo</id>
+            <url>https://github.com/marouenj/mvn-repo/raw/master/releases</url>
+        </repository>
+        <repository>
+            <id>snapshot-repo</id>
+            <url>https://github.com/marouenj/mvn-repo/raw/master/snapshots</url>
+        </repository>
+    </repositories>
 </project>
