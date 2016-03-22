@@ -7,6 +7,23 @@ import java.io.File;
 
 public final class TestCaseLoader {
 
+    public static JsonNode asIs(File file) {
+        try {
+            JsonNode testCases = JsonUtil.fromFile(file);
+            if (!JsonUtil.isValid(testCases)) {
+                throw new RuntimeException();
+            }
+
+            return testCases;
+        } catch (Exception e) {
+            handleExceptions(e);
+        }
+
+        // unreachable
+        // this is merely to satisfy the compiler
+        return null;
+    }
+
     public static Object[][] testNgAdapter(File file) {
         try {
             JsonNode testCases = JsonUtil.fromFile(file);
