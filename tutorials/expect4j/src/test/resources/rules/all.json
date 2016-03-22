@@ -1,0 +1,25 @@
+{
+	"default" : [0],
+	"override" : [
+		{
+			"rule" : [ null, {}, {} ],
+			"action" : [1]
+		},
+		{
+			"rule" : [ {}, {}, 0 ],
+			"action" : [1]
+		},
+		{
+			"rule" : [ {}, {}, 128 ],
+			"action" : [1]
+		},
+		{
+			"rule" : [ null, {}, 0 ],
+			"action" : [2]
+		},
+		{
+			"rule" : [ null, {}, 128 ],
+			"action" : [2]
+		}
+	]
+}
