@@ -159,15 +159,15 @@ public class JsonUtil {
     /**
      * Given a testcase, lookup the most matching rule and return the list of expected vals
      *
-     * @param expect   expect4j config file
+     * @param expected expect4j config file
      * @param testCase Array of vals representing a testcase
      * @return Array of vals containing the list of expected vals
      */
-    public static JsonNode lookUpRuleForTestcase(JsonNode expect, JsonNode testCase) {
-        JsonNode match = expect.get("default");
+    public static JsonNode lookUpRuleForTestcase(JsonNode testCase, JsonNode expected) {
+        JsonNode match = expected.get("default");
         int closeness = 0;
 
-        JsonNode rules = expect.get("override");
+        JsonNode rules = expected.get("override");
         if (rules == null) {
             return match;
         }
@@ -185,7 +185,7 @@ public class JsonUtil {
                 if (val.getNodeType() == JsonNodeType.OBJECT) {
                     continue;
                 }
-                if (val.getNodeType() == testCase.get(i).getNodeType()) {
+                if (val.getNodeType() == testCase.get(i).getNodeType() && val.equals(testCase.get(i))) {
                     matchCandidate = action;
                     closenessCandidate++;
                 } else {
@@ -201,5 +201,56 @@ public class JsonUtil {
         }
 
         return match;
+    }
+
+    public static Object[][] convertToObjectMatrix(JsonNode testCases, JsonNode expected) {
+        int[] sizes = combowork.load4j.util.JsonUtil.sizes(testCases);
+        int nbreTestCases = sizes[0];
+        int nbreVals = sizes[1];
+
+        int nbreExpected = expected.get("default").size();
+
+
+        Object[][] view = new Object[nbreTestCases][nbreVals+nbreExpected];
+
+        int i = -1;
+        for (JsonNode testCase : testCases) {
+            i++;
+            JsonNode vals = testCase.get("Case");
+
+            int j = -1;
+            for (JsonNode val : vals) {
+                j++;
+                view[i][j] = jsonToJavaType(val);
+            }
+
+            JsonNode rule = lookUpRuleForTestcase(vals, expected);
+            for (JsonNode val : rule) {
+                j++;
+                view[i][j] = jsonToJavaType(val);
+            }
+        }
+
+        return view;
+    }
+
+    private static Object jsonToJavaType(JsonNode node) {
+        if (node.isNumber()) {
+            return node.numberValue();
+        }
+
+        if (node.isBoolean()) {
+            return node.asBoolean();
+        }
+
+        if (node.isTextual()) {
+            return node.asText();
+        }
+
+        if (node.isNull()) {
+            return null;
+        }
+
+        throw new RuntimeException();
     }
 }

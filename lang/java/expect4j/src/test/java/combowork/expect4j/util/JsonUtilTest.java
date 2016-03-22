@@ -17,11 +17,15 @@ import java.lang.reflect.Method;
 public class JsonUtilTest {
 
     private static Method fromText;
+    private static Method fromTextLoad4j;
 
     @BeforeClass
     public void init() throws NoSuchMethodException {
         fromText = JsonUtil.class.getDeclaredMethod("fromText", String.class, String.class);
         fromText.setAccessible(true);
+
+        fromTextLoad4j = combowork.load4j.util.JsonUtil.class.getDeclaredMethod("fromText", String.class, String.class);
+        fromTextLoad4j.setAccessible(true);
     }
 
     @DataProvider(name = "isValid")
@@ -124,6 +128,74 @@ public class JsonUtilTest {
 
     @Test(dataProvider = "lookUpRuleForTestcase")
     public void lookUpRuleForTestcase(JsonNode expect, JsonNode testcase, String expected) {
-        Assert.assertEquals(JsonUtil.lookUpRuleForTestcase(expect, testcase).toString(), expected);
+        Assert.assertEquals(JsonUtil.lookUpRuleForTestcase(testcase, expect).toString(), expected);
     }
+
+    @DataProvider(name = "convertToObjectMatrix")
+    public Object[][] convertToObjectMatrix() throws InvocationTargetException, IllegalAccessException {
+        String[] testCases = new String[]{
+                "[{\"Case\":[\"string\"]}]",
+                "[{\"Case\":[\"string\", 5]}]",
+                "[{\"Case\":[\"string\"]}, {\"Case\":[\"string2\"]}]]",
+                "[{\"Case\":[\"string\", 5]}, {\"Case\":[\"string2\", 7]}]]",
+        };
+
+        String[] expect = new String[]{
+                "{\"default\":[1]}",
+                "{\"default\":[1]}",
+                "{\"default\":[1],\"override\":[{\"rule\":[\"string2\"],\"action\":[2]}]}",
+                "{\"default\":[1],\"override\":[{\"rule\":[\"string2\", 7],\"action\":[3]}]}",
+        };
+
+
+        Object[][][] expected = new Object[][][]{
+                new Object[][]{
+                        {"string", 1},
+                },
+                new Object[][]{
+                        {"string", 5, 1},
+                },
+                new Object[][]{
+                        {"string", 1},
+                        {"string2", 2},
+                },
+                new Object[][]{
+                        {"string", 5, 1},
+                        {"string2", 7, 3},
+                },
+        };
+
+        Object[][] data = new Object[testCases.length][];
+        for (int i = 0; i < data.length; i++) {
+            data[i] = new Object[]{fromTextLoad4j.invoke(null, testCases[i], null), fromText.invoke(null, expect[i], null), expected[i]};
+        }
+
+        return data;
+    }
+
+    @Test(dataProvider = "convertToObjectMatrix")
+    public void convertToObjectMatrix(JsonNode testCases, JsonNode expect, Object[][] expected) {
+        Assert.assertNotNull(testCases);
+        Object[][] actual = JsonUtil.convertToObjectMatrix(testCases, expect);
+
+        Assert.assertEquals(actual.length, expected.length);
+
+        int i = -1;
+        for (Object[] entry : actual) {
+            i++;
+            Assert.assertEquals(entry.length, expected[i].length);
+        }
+
+        i = -1;
+        for (Object[] vals : actual) {
+            i++;
+
+            int j = -1;
+            for (Object val : vals) {
+                j++;
+                Assert.assertEquals(val, expected[i][j]);
+            }
+        }
+    }
+
 }
