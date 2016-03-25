@@ -18,6 +18,7 @@ import java.util.List;
  * Utility for {@link JsonNode}
  *
  * @author marouenj
+ *
  */
 public class JsonUtil {
 
@@ -29,6 +30,7 @@ public class JsonUtil {
 
     /**
      * List of log messages intrinsic to {@link JsonUtil}
+     *
      */
     private enum LogMessages {
         UNABLE_TO_OPEN_FILE("Unable to open file, %s"),
@@ -50,6 +52,13 @@ public class JsonUtil {
         }
     }
 
+    /**
+     * Load a ComboWork test suite from a file into a {@link JsonNode}
+     *
+     * @param file handle to the file containing the test suite
+     * @return JsonNode view of the test cases
+     *
+     */
     public static JsonNode fromFile(File file) {
         String path = file.getPath();
         String text;
@@ -70,6 +79,14 @@ public class JsonUtil {
         return fromText(text, path);
     }
 
+    /**
+     * Parse a test suite in text into a {@link JsonNode}
+     *
+     * @param text load of the test suite
+     * @param path path of the file containing the test suite
+     * @return JsonNode view of the test cases
+     *
+     */
     private static JsonNode fromText(String text, String path) {
         JsonNode tree;
         try {
@@ -83,6 +100,13 @@ public class JsonUtil {
         return tree;
     }
 
+    /**
+     * Validate a ComboWork test suite
+     *
+     * @param testcases Test cases to be validated
+     * @return Validation result
+     *
+     */
     public static boolean isValid(JsonNode testcases) {
         if (testcases == null || testcases.size() == 0) {
             return false;
