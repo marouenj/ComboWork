@@ -26,7 +26,7 @@ import java.io.File;
  *
  * @author marouenj
  */
-public final class TestCaseLoader {
+public final class TestCaseAdapter {
 
     /**
      * Load the test cases then return them as {@link JsonNode}
