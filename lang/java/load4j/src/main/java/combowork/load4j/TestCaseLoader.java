@@ -5,8 +5,36 @@ import combowork.load4j.util.JsonUtil;
 
 import java.io.File;
 
+/**
+ * Load ComboWork test cases
+ * Test cases are of the form
+ * [
+ * {
+ * "Num : 1,
+ * "Case" : ["John", "Doe", 18],
+ * },
+ * {
+ * "Num : 2,
+ * "Case" : [..., ..., ...],
+ * },
+ * ...
+ * {
+ * "Num : ...,
+ * "Case" : [..., ..., ...],
+ * },
+ * ]
+ *
+ * @author marouenj
+ */
 public final class TestCaseLoader {
 
+    /**
+     * Load the test cases then return them as {@link JsonNode}
+     * This output is used when piping to expect4j
+     *
+     * @param file contains the test cases
+     * @return test cases as viewed through {@link JsonNode}
+     */
     public static JsonNode asIs(File file) {
         try {
             JsonNode testCases = JsonUtil.fromFile(file);
@@ -24,6 +52,13 @@ public final class TestCaseLoader {
         return null;
     }
 
+    /**
+     * Load the test cases then return them as {@code Object[][]}
+     * This output is used when piping to TestNG
+     *
+     * @param file contains the test cases
+     * @return test cases in {@code Object[][]}
+     */
     public static Object[][] testNgAdapter(File file) {
         try {
             JsonNode testCases = JsonUtil.fromFile(file);
