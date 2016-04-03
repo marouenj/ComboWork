@@ -103,27 +103,27 @@ public class JsonUtil {
     /**
      * Validate a ComboWork test suite
      *
-     * @param testcases Test cases to be validated
+     * @param testCases Test cases to be validated
      * @return Validation result
      *
      */
-    public static boolean isValid(JsonNode testcases) {
-        if (testcases == null || testcases.size() == 0) {
+    public static boolean isValid(JsonNode testCases) {
+        if (testCases == null || testCases.size() == 0) {
             return false;
         }
 
-        if (testcases.getNodeType() != JsonNodeType.ARRAY) { // root should start with an array of objects
+        if (testCases.getNodeType() != JsonNodeType.ARRAY) { // root should start with an array of objects
             return false;
         }
 
         List<JsonNodeType> pattern;
         try {
-            pattern = pattern(testcases.get(0));
+            pattern = pattern(testCases.get(0));
         } catch (RuntimeException e) {
             return false;
         }
 
-        for (JsonNode testcase : testcases) {
+        for (JsonNode testcase : testCases) {
             if (testcase.getNodeType() != JsonNodeType.OBJECT) {
                 return false;
             }
