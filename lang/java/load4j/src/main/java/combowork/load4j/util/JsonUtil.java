@@ -210,6 +210,12 @@ public class JsonUtil {
         return view;
     }
 
+    /**
+     * Json to Java type mapper
+     *
+     * @param node Json data
+     * @return Java data
+     */
     private static Object jsonToJavaType(JsonNode node) {
         if (node.isNumber()) {
             return node.numberValue();
