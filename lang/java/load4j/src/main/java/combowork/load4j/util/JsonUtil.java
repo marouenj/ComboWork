@@ -191,9 +191,8 @@ public class JsonUtil {
      * @return view of the test cases
      */
     public static Object[][] convertToObjectMatrix(JsonNode testCases) {
-        int[] sizes = sizes(testCases);
-        int nbreTestCases = sizes[0];
-        int nbreVals = sizes[1];
+        int nbreTestCases = testCases.size();
+        int nbreVals = testCases.get(0).get(VALS_KEY).size();
 
         Object[][] view = new Object[nbreTestCases][nbreVals];
 
@@ -209,14 +208,6 @@ public class JsonUtil {
         }
 
         return view;
-    }
-
-    // TODO change to private
-    public static int[] sizes(JsonNode testCases) {
-        int tests = testCases.size();
-        int vals = testCases.get(0).get(VALS_KEY).size();
-
-        return new int[]{tests, vals};
     }
 
     private static Object jsonToJavaType(JsonNode node) {
