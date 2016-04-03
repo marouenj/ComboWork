@@ -151,6 +151,13 @@ public class JsonUtil {
         return true;
     }
 
+    /**
+     * Infer the pattern of the test cases from the first entry
+     * All subsequent entries will be checked against the pattern in {@link JsonUtil#isValid(JsonNode)}
+     *
+     * @param first First entry in the test case file to infer the pattern from
+     * @return Pattern
+     */
     private static ArrayList<JsonNodeType> pattern(JsonNode first) {
         if (first.getNodeType() != JsonNodeType.OBJECT) {
             throw new RuntimeException();
@@ -177,6 +184,12 @@ public class JsonUtil {
         return pattern;
     }
 
+    /**
+     * Map test cases to a {@link Object}[][]
+     *
+     * @param testCases test cases
+     * @return view of the test cases
+     */
     public static Object[][] convertToObjectMatrix(JsonNode testCases) {
         int[] sizes = sizes(testCases);
         int nbreTestCases = sizes[0];
