@@ -1,6 +1,6 @@
 package marouenj.combowork.tutorials.model;
 
-import combowork.load4j.TestCaseLoader;
+import combowork.load4j.TestCaseAdapter;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -32,7 +32,7 @@ public class PersonTest {
             throw new NullPointerException();
         }
         File file = new File(resource.getFile());
-        return TestCaseLoader.testNgAdapter(file);
+        return TestCaseAdapter.testNgAdapter(file);
     }
 
     @Test(dataProvider = "isValid")
@@ -54,7 +54,7 @@ public class PersonTest {
             throw new NullPointerException();
         }
         File file = new File(resource.getFile());
-        return TestCaseLoader.testNgAdapter(file);
+        return TestCaseAdapter.testNgAdapter(file);
     }
 
     @Test(dataProvider = "isUnvalid")
