@@ -1,0 +1,114 @@
+[
+  {
+    "desc": "",
+    "in": [
+      {
+        "Case": [
+          "string"
+        ]
+      }
+    ],
+    "out": [
+      [
+        "string"
+      ]
+    ]
+  },
+  {
+    "desc": "",
+    "in": [
+      {
+        "Case": [
+          "string",
+          5
+        ]
+      }
+    ],
+    "out": [
+      [
+        "string",
+        5
+      ]
+    ]
+  },
+  {
+    "desc": "",
+    "in": [
+      {
+        "Case": [
+          "string"
+        ]
+      },
+      {
+        "Case": [
+          "string2"
+        ]
+      }
+    ],
+    "out": [
+      [
+        "string"
+      ],
+      [
+        "string2"
+      ]
+    ]
+  },
+  {
+    "desc": "",
+    "in": [
+      {
+        "Case": [
+          "string",
+          5
+        ]
+      },
+      {
+        "Case": [
+          "string2",
+          7
+        ]
+      }
+    ],
+    "out": [
+      [
+        "string",
+        5
+      ],
+      [
+        "string2",
+        7
+      ]
+    ]
+  },
+  {
+    "desc": "",
+    "in": [
+      {
+        "Case": [
+          true
+        ]
+      }
+    ],
+    "out": [
+      [
+        true
+      ]
+    ]
+  },
+  {
+    "desc": "",
+    "in": [
+      {
+        "Case": [
+          null
+        ]
+      }
+    ],
+    "out": [
+      [
+        null
+      ]
+    ]
+  }
+]

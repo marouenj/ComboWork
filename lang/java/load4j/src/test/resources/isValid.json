@@ -1,0 +1,119 @@
+[
+  {
+    "desc": "",
+    "in": {},
+    "out": false
+  },
+  {
+    "desc": "",
+    "in": [],
+    "out": false
+  },
+  {
+    "desc": "",
+    "in": [
+      {}
+    ],
+    "out": false
+  },
+  {
+    "desc": "",
+    "in": [
+      {},
+      {}
+    ],
+    "out": false
+  },
+  {
+    "desc": "",
+    "in": [
+      {
+        "Case": [
+          "string"
+        ]
+      }
+    ],
+    "out": true
+  },
+  {
+    "desc": "",
+    "in": [
+      {
+        "Case": [
+          "string",
+          5
+        ]
+      }
+    ],
+    "out": true
+  },
+  {
+    "desc": "",
+    "in": [
+      {
+        "Case": [
+          "string"
+        ]
+      },
+      {
+        "Case": [
+          "string2"
+        ]
+      }
+    ],
+    "out": true
+  },
+  {
+    "desc": "",
+    "in": [
+      {
+        "Case": [
+          "string",
+          5
+        ]
+      },
+      {
+        "Case": [
+          "string2",
+          7
+        ]
+      }
+    ],
+    "out": true
+  },
+  {
+    "desc": "",
+    "in": [
+      {
+        "Case": [
+          "string",
+          5
+        ]
+      },
+      {
+        "Case": [
+          "string2"
+        ]
+      }
+    ],
+    "out": false
+  },
+  {
+    "desc": "",
+    "in": [
+      {
+        "Case": [
+          "string",
+          5
+        ]
+      },
+      {
+        "Case": [
+          "string2",
+          true
+        ]
+      }
+    ],
+    "out": false
+  }
+]
