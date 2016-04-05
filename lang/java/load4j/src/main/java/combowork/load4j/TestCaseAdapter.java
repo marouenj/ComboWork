@@ -33,7 +33,7 @@ public final class TestCaseAdapter {
      * This output is used when piping to expect4j
      *
      * @param file contains the test cases
-     * @return test cases as viewed through {@link JsonNode}
+     * @return test cases as {@link JsonNode}
      */
     public static JsonNode asIs(File file) {
         try {
