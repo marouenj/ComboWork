@@ -35,7 +35,7 @@ public class JsonUtil {
     private enum LogMessages {
         UNABLE_TO_OPEN_FILE("Unable to open file, %s"),
         UNABLE_TO_CONVERT_STREAM_TO_STRING("Unable to convert Stream to String in, %s"),
-        UNABLE_TO_PARSE_JSON("Unable to parse json tree for file , %s");
+        UNABLE_TO_PARSE_JSON("Unable to parse json tree for file, %s");
 
         private final String text;
 
