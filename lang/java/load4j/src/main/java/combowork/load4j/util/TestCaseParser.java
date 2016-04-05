@@ -18,7 +18,6 @@ import java.util.List;
  * Utility for {@link JsonNode}
  *
  * @author marouenj
- *
  */
 public class TestCaseParser {
 
