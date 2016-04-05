@@ -10,7 +10,6 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.FileReader;
-import java.lang.reflect.Method;
 import java.net.URL;
 
 /**
@@ -20,13 +19,10 @@ import java.net.URL;
  */
 public class TestCaseParserTest {
 
-    private static Method fromText;
     private final static ObjectMapper MAPPER = new ObjectMapper();
 
     @BeforeClass
-    public void init() throws NoSuchMethodException {
-        fromText = TestCaseParser.class.getDeclaredMethod("fromText", String.class, String.class);
-        fromText.setAccessible(true);
+    public void init() {
     }
 
     @DataProvider(name = "isValid")
