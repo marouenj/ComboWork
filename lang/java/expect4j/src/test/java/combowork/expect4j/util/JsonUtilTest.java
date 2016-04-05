@@ -24,7 +24,7 @@ public class JsonUtilTest {
         fromText = JsonUtil.class.getDeclaredMethod("fromText", String.class, String.class);
         fromText.setAccessible(true);
 
-        fromTextLoad4j = combowork.load4j.util.JsonUtil.class.getDeclaredMethod("fromText", String.class, String.class);
+        fromTextLoad4j = combowork.load4j.util.TestCaseParser.class.getDeclaredMethod("fromText", String.class, String.class);
         fromTextLoad4j.setAccessible(true);
     }
 

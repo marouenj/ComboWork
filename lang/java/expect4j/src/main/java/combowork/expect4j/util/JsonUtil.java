@@ -25,6 +25,9 @@ public class JsonUtil {
 
     private final static ObjectMapper MAPPER = new ObjectMapper();
 
+    // TODO make this public in load4j
+    private final static String VALS_KEY = "Case";
+
     /**
      * List of log messages intrinsic to {@link JsonUtil}
      */
@@ -204,14 +207,13 @@ public class JsonUtil {
     }
 
     public static Object[][] convertToObjectMatrix(JsonNode testCases, JsonNode expected) {
-        int[] sizes = combowork.load4j.util.JsonUtil.sizes(testCases);
-        int nbreTestCases = sizes[0];
-        int nbreVals = sizes[1];
+        int nbreTestCases = testCases.size();
+        int nbreVals = testCases.get(0).get(VALS_KEY).size();
 
         int nbreExpected = expected.get("default").size();
 
 
-        Object[][] view = new Object[nbreTestCases][nbreVals+nbreExpected];
+        Object[][] view = new Object[nbreTestCases][nbreVals + nbreExpected];
 
         int i = -1;
         for (JsonNode testCase : testCases) {

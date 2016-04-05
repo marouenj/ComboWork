@@ -8,7 +8,7 @@ import java.io.File;
 public final class TestCaseLoader {
 
     public static Object[][] testNgAdapter(File load4j, File expect4j) {
-        JsonNode testCases = combowork.load4j.TestCaseLoader.asIs(load4j);
+        JsonNode testCases = combowork.load4j.TestCaseAdapter.asIs(load4j);
         try {
             JsonNode expected = JsonUtil.fromFile(expect4j);
             if (!JsonUtil.isValid(testCases)) {
