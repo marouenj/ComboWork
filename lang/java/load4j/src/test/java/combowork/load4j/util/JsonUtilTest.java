@@ -1,13 +1,17 @@
 package combowork.load4j.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.io.IOUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.lang.reflect.InvocationTargetException;
+import java.io.File;
+import java.io.FileReader;
 import java.lang.reflect.Method;
+import java.net.URL;
 
 /**
  * Test for {@link JsonUtil}
@@ -17,6 +21,7 @@ import java.lang.reflect.Method;
 public class JsonUtilTest {
 
     private static Method fromText;
+    private final static ObjectMapper MAPPER = new ObjectMapper();
 
     @BeforeClass
     public void init() throws NoSuchMethodException {
@@ -25,40 +30,25 @@ public class JsonUtilTest {
     }
 
     @DataProvider(name = "isValid")
-    public Object[][] isValid() throws InvocationTargetException, IllegalAccessException {
-        String[] json = new String[]{
-                "{}",
-                "[]",
-                "[{}]",
-                "[{}, {}]",
+    public Object[][] isValid() throws Exception {
+        ClassLoader classLoader = getClass().getClassLoader();
 
-                "[{\"Case\":[\"string\"]}]",
-                "[{\"Case\":[\"string\", 5]}]",
-                "[{\"Case\":[\"string\"]}, {\"Case\":[\"string2\"]}]]",
-                "[{\"Case\":[\"string\", 5]}, {\"Case\":[\"string2\", 7]}]]",
+        URL resource = classLoader.getResource("isValid.json");
+        if (resource == null) {
+            throw new Exception();
+        }
 
-                "[{\"Case\":[\"string\", 5]}, {\"Case\":[\"string2\"]}]]",
-                "[{\"Case\":[\"string\", 5]}, {\"Case\":[\"string2\", true]}]]",
-        };
+        JsonNode testCases = MAPPER.readTree(
+                IOUtils.toString(
+                        new FileReader(
+                                new File(resource.getFile()))));
 
-        Boolean[] expected = new Boolean[]{
-                false,
-                false,
-                false,
-                false,
+        Object[][] data = new Object[testCases.size()][];
 
-                true,
-                true,
-                true,
-                true,
-
-                false,
-                false,
-        };
-
-        Object[][] data = new Object[json.length][];
-        for (int i = 0; i < data.length; i++) {
-            data[i] = new Object[]{fromText.invoke(null, json[i], null), expected[i]};
+        int i = -1;
+        for (JsonNode testCase : testCases) {
+            i++;
+            data[i] = new Object[]{testCase.get("in"), testCase.get("out").booleanValue()};
         }
 
         return data;
@@ -76,42 +66,37 @@ public class JsonUtilTest {
     }
 
     @DataProvider(name = "convertToObjectMatrix")
-    public Object[][] convertToObjectMatrix() throws InvocationTargetException, IllegalAccessException {
-        String[] json = new String[]{
-                "[{\"Case\":[\"string\"]}]",
-                "[{\"Case\":[\"string\", 5]}]",
-                "[{\"Case\":[\"string\"]}, {\"Case\":[\"string2\"]}]]",
-                "[{\"Case\":[\"string\", 5]}, {\"Case\":[\"string2\", 7]}]]",
-                "[{\"Case\":[true]}]",
-                "[{\"Case\":[null]}]",
-        };
+    public Object[][] convertToObjectMatrix() throws Exception {
+        ClassLoader classLoader = getClass().getClassLoader();
 
-        Object[][][] expected = new Object[][][]{
-                new Object[][]{
-                        {"string"},
-                },
-                new Object[][]{
-                        {"string", 5},
-                },
-                new Object[][]{
-                        {"string"},
-                        {"string2"},
-                },
-                new Object[][]{
-                        {"string", 5},
-                        {"string2", 7},
-                },
-                new Object[][]{
-                        {true},
-                },
-                new Object[][]{
-                        {null},
-                },
-        };
+        URL resource = classLoader.getResource("convertToObjectMatrix.json");
+        if (resource == null) {
+            throw new Exception();
+        }
 
-        Object[][] data = new Object[json.length][];
-        for (int i = 0; i < data.length; i++) {
-            data[i] = new Object[]{fromText.invoke(null, json[i], null), expected[i]};
+        JsonNode testCases = MAPPER.readTree(
+                IOUtils.toString(
+                        new FileReader(
+                                new File(resource.getFile()))));
+
+        Object[][] data = new Object[testCases.size()][];
+
+        int i = -1;
+        for (JsonNode testCase : testCases) {
+            i++;
+            Object[][] expected = new Object[testCase.get("out").size()][];
+            int j = -1;
+            for (JsonNode expect : testCase.get("out")) {
+                j++;
+                expected[j] = new Object[expect.size()];
+                int k = -1;
+                for (JsonNode val : expect) {
+                    k++;
+                    expected[j][k] = jsonToJavaType(val);
+                }
+            }
+
+            data[i] = new Object[]{testCase.get("in"), expected};
         }
 
         return data;
@@ -145,5 +130,31 @@ public class JsonUtilTest {
                 Assert.assertEquals(val, expected[i][j]);
             }
         }
+    }
+
+    /**
+     * Utility used to map Json types to Java types
+     *
+     * @param node Json-typed value
+     * @return Java-typed value
+     */
+    private static Object jsonToJavaType(JsonNode node) {
+        if (node.isNumber()) {
+            return node.numberValue();
+        }
+
+        if (node.isBoolean()) {
+            return node.asBoolean();
+        }
+
+        if (node.isTextual()) {
+            return node.asText();
+        }
+
+        if (node.isNull()) {
+            return null;
+        }
+
+        throw new RuntimeException();
     }
 }
