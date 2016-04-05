@@ -14,12 +14,18 @@
     <url>http://maven.apache.org</url>
 
     <properties>
+        <version.maven.clean>3.0.0</version.maven.clean>
+        <version.maven.compiler>3.1</version.maven.compiler>
+        <version.maven.jar>2.6</version.maven.jar>
+        <version.maven.install>2.3.1</version.maven.install>
+        <version.maven.surefire>2.19</version.maven.surefire>
+        <version.maven.failsafe>2.19</version.maven.failsafe>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <version.testng>6.9.10</version.testng>
         <version.jmockit>1.21</version.jmockit>
         <version.mockito>1.10.19</version.mockito>
-        <version.load4j>1.0.0-SNAPSHOT</version.load4j>
         <version.slf4j>1.7.14</version.slf4j>
+        <version.load4j>1.0.0-SNAPSHOT</version.load4j>
     </properties>
 
     <dependencies>
@@ -72,11 +78,41 @@
     <build>
         <finalName>expect4j-${project.version}</finalName>
         <plugins>
+            <!-- initialize -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>${version.maven.clean}</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- compile/test-compile -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>${version.maven.compiler}</version>
+                <executions>
+                    <execution>
+                        <id>main</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>test</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -86,30 +122,62 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.19</version>
+                <version>${version.maven.surefire}</version>
+                <executions>
+                    <execution>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
                     <argLine>
                         -javaagent:"${user.home}/.m2/repository/org/jmockit/jmockit/${version.jmockit}/jmockit-${version.jmockit}.jar"
                     </argLine>
                 </configuration>
             </plugin>
+            <!-- package -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${version.maven.jar}</version>
+                <executions>
+                    <execution>
+                        <id>main</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- integration-test/verify -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.19</version>
+                <version>${version.maven.failsafe}</version>
                 <executions>
                     <execution>
+                        <id>it</id>
+                        <phase>integration-test</phase>
                         <goals>
                             <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>verify</id>
+                        <phase>verify</phase>
+                        <goals>
                             <goal>verify</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
+            <!-- install -->
             <plugin>
                 <artifactId>maven-install-plugin</artifactId>
-                <version>2.3.1</version>
+                <version>${version.maven.install}</version>
                 <configuration>
                     <createChecksum>true</createChecksum>
                 </configuration>
