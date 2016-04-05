@@ -1,7 +1,7 @@
 package combowork.load4j;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import combowork.load4j.util.JsonUtil;
+import combowork.load4j.util.TestCaseParser;
 
 import java.io.File;
 
@@ -37,8 +37,8 @@ public final class TestCaseAdapter {
      */
     public static JsonNode asIs(File file) {
         try {
-            JsonNode testCases = JsonUtil.fromFile(file);
-            if (!JsonUtil.isValid(testCases)) {
+            JsonNode testCases = TestCaseParser.fromFile(file);
+            if (!TestCaseParser.isValid(testCases)) {
                 throw new RuntimeException();
             }
 
@@ -61,12 +61,12 @@ public final class TestCaseAdapter {
      */
     public static Object[][] testNgAdapter(File file) {
         try {
-            JsonNode testCases = JsonUtil.fromFile(file);
-            if (!JsonUtil.isValid(testCases)) {
+            JsonNode testCases = TestCaseParser.fromFile(file);
+            if (!TestCaseParser.isValid(testCases)) {
                 throw new RuntimeException();
             }
 
-            return JsonUtil.convertToObjectMatrix(testCases);
+            return TestCaseParser.convertToObjectMatrix(testCases);
         } catch (Exception e) {
             handleExceptions(e);
         }

@@ -14,18 +14,18 @@ import java.lang.reflect.Method;
 import java.net.URL;
 
 /**
- * Test for {@link JsonUtil}
+ * Test for {@link TestCaseParser}
  *
  * @author marouenj
  */
-public class JsonUtilTest {
+public class TestCaseParserTest {
 
     private static Method fromText;
     private final static ObjectMapper MAPPER = new ObjectMapper();
 
     @BeforeClass
     public void init() throws NoSuchMethodException {
-        fromText = JsonUtil.class.getDeclaredMethod("fromText", String.class, String.class);
+        fromText = TestCaseParser.class.getDeclaredMethod("fromText", String.class, String.class);
         fromText.setAccessible(true);
     }
 
@@ -55,14 +55,14 @@ public class JsonUtilTest {
     }
 
     /**
-     * Test {@link JsonUtil#isValid(JsonNode)}
+     * Test {@link TestCaseParser#isValid(JsonNode)}
      *
      * @param json     Json input structure
      * @param expected Expected outcome about the validation
      */
     @Test(dataProvider = "isValid")
     public void isValid(JsonNode json, Boolean expected) {
-        Assert.assertEquals(JsonUtil.isValid(json), (boolean) expected);
+        Assert.assertEquals(TestCaseParser.isValid(json), (boolean) expected);
     }
 
     @DataProvider(name = "convertToObjectMatrix")
@@ -103,14 +103,14 @@ public class JsonUtilTest {
     }
 
     /**
-     * Test {@link JsonUtil#convertToObjectMatrix(JsonNode)}
+     * Test {@link TestCaseParser#convertToObjectMatrix(JsonNode)}
      *
      * @param json     Json input structure
      * @param expected Expected outcome about the validation
      */
     @Test(dataProvider = "convertToObjectMatrix")
     public void convertToObjectMatrix(JsonNode json, Object[][] expected) {
-        Object[][] actual = JsonUtil.convertToObjectMatrix(json);
+        Object[][] actual = TestCaseParser.convertToObjectMatrix(json);
 
         Assert.assertEquals(actual.length, expected.length);
 

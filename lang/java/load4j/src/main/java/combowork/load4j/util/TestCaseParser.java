@@ -20,16 +20,16 @@ import java.util.List;
  * @author marouenj
  *
  */
-public class JsonUtil {
+public class TestCaseParser {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(JsonUtil.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(TestCaseParser.class);
 
     private final static ObjectMapper MAPPER = new ObjectMapper();
 
     private final static String VALS_KEY = "Case";
 
     /**
-     * List of log messages intrinsic to {@link JsonUtil}
+     * List of log messages intrinsic to {@link TestCaseParser}
      *
      */
     private enum LogMessages {
@@ -153,7 +153,7 @@ public class JsonUtil {
 
     /**
      * Infer the pattern of the test cases from the first entry
-     * All subsequent entries will be checked against the pattern in {@link JsonUtil#isValid(JsonNode)}
+     * All subsequent entries will be checked against the pattern in {@link TestCaseParser#isValid(JsonNode)}
      *
      * @param first First entry in the test case file to infer the pattern from
      * @return Pattern
