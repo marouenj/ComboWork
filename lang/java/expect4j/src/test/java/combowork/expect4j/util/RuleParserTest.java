@@ -1,13 +1,18 @@
 package combowork.expect4j.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.io.IOUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.io.File;
+import java.io.FileReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
 
 /**
  * Test for {@link RuleParser}
@@ -15,6 +20,8 @@ import java.lang.reflect.Method;
  * @author marouenj
  */
 public class RuleParserTest {
+
+    private final static ObjectMapper MAPPER = new ObjectMapper();
 
     private static Method fromText;
     private static Method fromTextLoad4j;
@@ -29,52 +36,25 @@ public class RuleParserTest {
     }
 
     @DataProvider(name = "isValid")
-    public Object[][] isValid() throws InvocationTargetException, IllegalAccessException {
-        String[] json = new String[]{
-                "[]",
-                "{}",
-                "{\"default\":[]}",
-                "{\"default\":[1],\"override\":[]}",
-                "{\"default\":[1],\"override\":{}}",
-                "{\"default\":[1],\"override\":[{},{},1]}",
-                "{\"default\":[1],\"override\":[{}]}",
-                "{\"default\":[1],\"override\":[{},{}]}",
-                "{\"default\":[1],\"override\":[{\"rule\":[{}],\"action\":[]}]}",
-                "{\"default\":[1],\"override\":[{\"rule\":[{}],\"action\":[\"1\"]}]}",
-                "{\"default\":[1],\"override\":[{\"rule\":[{}],\"action\":[1,2]}]}",
-                "{\"default\":[null],\"override\":[{\"rule\":[{}],\"action\":[1]},{\"rule\":[{}],\"action\":[\"2\"]}]}",
+    public Object[][] isValid() throws Exception {
+        ClassLoader classLoader = getClass().getClassLoader();
 
-                "{\"default\":[1]}",
-                "{\"default\":[1],\"override\":[{\"rule\":[{}],\"action\":[1]}]}",
-                "{\"default\":[1],\"override\":[{\"rule\":[{}],\"action\":[1]},{\"rule\":[{}],\"action\":[2]}]}",
-                "{\"default\":[null],\"override\":[{\"rule\":[{}],\"action\":[1]}]}",
-                "{\"default\":[null],\"override\":[{\"rule\":[{}],\"action\":[1]},{\"rule\":[{}],\"action\":[2]}]}",
-        };
+        URL resource = classLoader.getResource("isValid.json");
+        if (resource == null) {
+            throw new Exception();
+        }
 
-        Boolean[] expected = new Boolean[]{
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
+        JsonNode testCases = MAPPER.readTree(
+                IOUtils.toString(
+                        new FileReader(
+                                new File(resource.getFile()))));
 
-                true,
-                true,
-                true,
-                true,
-                true,
-        };
+        Object[][] data = new Object[testCases.size()][];
 
-        Object[][] data = new Object[json.length][];
-        for (int i = 0; i < data.length; i++) {
-            data[i] = new Object[]{fromText.invoke(null, json[i], null), expected[i]};
+        int i = -1;
+        for (JsonNode testCase : testCases) {
+            i++;
+            data[i] = new Object[]{testCase.get("in"), testCase.get("out").booleanValue()};
         }
 
         return data;
