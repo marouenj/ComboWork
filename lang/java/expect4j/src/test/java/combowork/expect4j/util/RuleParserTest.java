@@ -139,42 +139,32 @@ public class RuleParserTest {
     }
 
     @DataProvider(name = "lookUpRuleForTestcase")
-    public Object[][] lookUpRuleForTestcase() throws InvocationTargetException, IllegalAccessException {
-        String[] expect = new String[]{
-                "{\"default\":[1]}",
-                "{\"default\":[1],\"override\":[{\"rule\":[{}, {}, {}, 2],\"action\":[2]}]}",
-                "{\"default\":[1],\"override\":[{\"rule\":[{}, {}, {}, 2],\"action\":[2]},{\"rule\":[{}, {}, {}, null],\"action\":[3]}]}",
-                "{\"default\":[1],\"override\":[{\"rule\":[{}, {}, {}, 2],\"action\":[2]},{\"rule\":[{}, {}, {}, null],\"action\":[3]},{\"rule\":[{}, \"str\", {}, null],\"action\":[4]}]}",
-        };
+    public Object[][] lookUpRuleForTestcase() throws Exception {
+        ClassLoader classLoader = getClass().getClassLoader();
 
-        String[] testcase = new String[]{
-                "[1, \"str\", true, null]",
-                "[1, \"str\", true, null]",
-                "[1, \"str\", true, null]",
-                "[1, \"str\", true, null]",
-        };
+        URL resource = classLoader.getResource("lookUpRuleForTestcase.json");
+        if (resource == null) {
+            throw new Exception();
+        }
 
-        String[] expected = new String[]{
-                "[1]",
-                "[1]",
-                "[3]",
-                "[4]",
-        };
+        JsonNode testCases = MAPPER.readTree(
+                IOUtils.toString(
+                        new FileReader(
+                                new File(resource.getFile()))));
 
-        Object[][] data = new Object[expect.length][];
-        for (int i = 0; i < data.length; i++) {
-            data[i] = new Object[]{
-                    fromText.invoke(null, expect[i], null),
-                    fromText.invoke(null, testcase[i], null),
-                    expected[i],
-            };
+        Object[][] data = new Object[testCases.size()][];
+
+        int i = -1;
+        for (JsonNode testCase : testCases) {
+            i++;
+            data[i] = new Object[]{testCase.get("load4j"), testCase.get("expect4j"), testCase.get("out").asText()};
         }
 
         return data;
     }
 
     @Test(dataProvider = "lookUpRuleForTestcase")
-    public void lookUpRuleForTestcase(JsonNode expect, JsonNode testcase, String expected) {
+    public void lookUpRuleForTestcase(JsonNode testcase, JsonNode expect, String expected) {
         Assert.assertEquals(RuleParser.lookUpRuleForTestcase(testcase, expect).toString(), expected);
     }
 }

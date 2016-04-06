@@ -1,0 +1,134 @@
+[
+  {
+    "desc": "",
+    "load4j": [
+      1,
+      "str",
+      true,
+      null
+    ],
+    "expect4j": {
+      "default": [
+        1
+      ]
+    },
+    "out": "[1]"
+  },
+  {
+    "desc": "",
+    "load4j": [
+      1,
+      "str",
+      true,
+      null
+    ],
+    "expect4j": {
+      "default": [
+        1
+      ],
+      "override": [
+        {
+          "rule": [
+            {},
+            {},
+            {},
+            2
+          ],
+          "action": [
+            2
+          ]
+        }
+      ]
+    },
+    "out": "[1]"
+  },
+  {
+    "desc": "",
+    "load4j": [
+      1,
+      "str",
+      true,
+      null
+    ],
+    "expect4j": {
+      "default": [
+        1
+      ],
+      "override": [
+        {
+          "rule": [
+            {},
+            {},
+            {},
+            2
+          ],
+          "action": [
+            2
+          ]
+        },
+        {
+          "rule": [
+            {},
+            {},
+            {},
+            null
+          ],
+          "action": [
+            3
+          ]
+        }
+      ]
+    },
+    "out": "[3]"
+  },
+  {
+    "desc": "",
+    "load4j": [
+      1,
+      "str",
+      true,
+      null
+    ],
+    "expect4j": {
+      "default": [
+        1
+      ],
+      "override": [
+        {
+          "rule": [
+            {},
+            {},
+            {},
+            2
+          ],
+          "action": [
+            2
+          ]
+        },
+        {
+          "rule": [
+            {},
+            {},
+            {},
+            null
+          ],
+          "action": [
+            3
+          ]
+        },
+        {
+          "rule": [
+            {},
+            "str",
+            {},
+            null
+          ],
+          "action": [
+            4
+          ]
+        }
+      ]
+    },
+    "out": "[4]"
+  }
+]
