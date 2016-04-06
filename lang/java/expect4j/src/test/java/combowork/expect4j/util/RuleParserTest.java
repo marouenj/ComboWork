@@ -10,8 +10,6 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.FileReader;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URL;
 
 /**
@@ -23,16 +21,8 @@ public class RuleParserTest {
 
     private final static ObjectMapper MAPPER = new ObjectMapper();
 
-    private static Method fromText;
-    private static Method fromTextLoad4j;
-
     @BeforeClass
     public void init() throws NoSuchMethodException {
-        fromText = RuleParser.class.getDeclaredMethod("fromText", String.class, String.class);
-        fromText.setAccessible(true);
-
-        fromTextLoad4j = combowork.load4j.util.TestCaseParser.class.getDeclaredMethod("fromText", String.class, String.class);
-        fromTextLoad4j.setAccessible(true);
     }
 
     @DataProvider(name = "isValid")
@@ -72,42 +62,37 @@ public class RuleParserTest {
     }
 
     @DataProvider(name = "convertToObjectMatrix")
-    public Object[][] convertToObjectMatrix() throws InvocationTargetException, IllegalAccessException {
-        String[] testCases = new String[]{
-                "[{\"Case\":[\"string\"]}]",
-                "[{\"Case\":[\"string\", 5]}]",
-                "[{\"Case\":[\"string\"]}, {\"Case\":[\"string2\"]}]]",
-                "[{\"Case\":[\"string\", 5]}, {\"Case\":[\"string2\", 7]}]]",
-        };
+    public Object[][] convertToObjectMatrix() throws Exception {
+        ClassLoader classLoader = getClass().getClassLoader();
 
-        String[] expect = new String[]{
-                "{\"default\":[1]}",
-                "{\"default\":[1]}",
-                "{\"default\":[1],\"override\":[{\"rule\":[\"string2\"],\"action\":[2]}]}",
-                "{\"default\":[1],\"override\":[{\"rule\":[\"string2\", 7],\"action\":[3]}]}",
-        };
+        URL resource = classLoader.getResource("convertToObjectMatrix.json");
+        if (resource == null) {
+            throw new Exception();
+        }
 
+        JsonNode testCases = MAPPER.readTree(
+                IOUtils.toString(
+                        new FileReader(
+                                new File(resource.getFile()))));
 
-        Object[][][] expected = new Object[][][]{
-                new Object[][]{
-                        {"string", 1},
-                },
-                new Object[][]{
-                        {"string", 5, 1},
-                },
-                new Object[][]{
-                        {"string", 1},
-                        {"string2", 2},
-                },
-                new Object[][]{
-                        {"string", 5, 1},
-                        {"string2", 7, 3},
-                },
-        };
+        Object[][] data = new Object[testCases.size()][];
 
-        Object[][] data = new Object[testCases.length][];
-        for (int i = 0; i < data.length; i++) {
-            data[i] = new Object[]{fromTextLoad4j.invoke(null, testCases[i], null), fromText.invoke(null, expect[i], null), expected[i]};
+        int i = -1;
+        for (JsonNode testCase : testCases) {
+            i++;
+            Object[][] expected = new Object[testCase.get("out").size()][];
+            int j = -1;
+            for (JsonNode expect : testCase.get("out")) {
+                j++;
+                expected[j] = new Object[expect.size()];
+                int k = -1;
+                for (JsonNode val : expect) {
+                    k++;
+                    expected[j][k] = jsonToJavaType(val);
+                }
+            }
+
+            data[i] = new Object[]{testCase.get("load4j"), testCase.get("expect4j"), expected};
         }
 
         return data;
@@ -166,5 +151,31 @@ public class RuleParserTest {
     @Test(dataProvider = "lookUpRuleForTestcase")
     public void lookUpRuleForTestcase(JsonNode testcase, JsonNode expect, String expected) {
         Assert.assertEquals(RuleParser.lookUpRuleForTestcase(testcase, expect).toString(), expected);
+    }
+
+    /**
+     * Utility used to map Json types to Java types
+     *
+     * @param node Json-typed value
+     * @return Java-typed value
+     */
+    private static Object jsonToJavaType(JsonNode node) {
+        if (node.isNumber()) {
+            return node.numberValue();
+        }
+
+        if (node.isBoolean()) {
+            return node.asBoolean();
+        }
+
+        if (node.isTextual()) {
+            return node.asText();
+        }
+
+        if (node.isNull()) {
+            return null;
+        }
+
+        throw new RuntimeException();
     }
 }
