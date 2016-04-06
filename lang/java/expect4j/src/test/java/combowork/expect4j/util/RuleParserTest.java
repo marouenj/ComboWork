@@ -10,18 +10,18 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * Test for {@link JsonUtil}
+ * Test for {@link RuleParser}
  *
  * @author marouenj
  */
-public class JsonUtilTest {
+public class RuleParserTest {
 
     private static Method fromText;
     private static Method fromTextLoad4j;
 
     @BeforeClass
     public void init() throws NoSuchMethodException {
-        fromText = JsonUtil.class.getDeclaredMethod("fromText", String.class, String.class);
+        fromText = RuleParser.class.getDeclaredMethod("fromText", String.class, String.class);
         fromText.setAccessible(true);
 
         fromTextLoad4j = combowork.load4j.util.TestCaseParser.class.getDeclaredMethod("fromText", String.class, String.class);
@@ -81,14 +81,14 @@ public class JsonUtilTest {
     }
 
     /**
-     * Test {@link JsonUtil#isValid(JsonNode)}
+     * Test {@link RuleParser#isValid(JsonNode)}
      *
      * @param json     Json input structure
      * @param expected Expected outcome about the validation
      */
     @Test(dataProvider = "isValid")
     public void isValid(JsonNode json, Boolean expected) {
-        Assert.assertEquals(JsonUtil.isValid(json), (boolean) expected);
+        Assert.assertEquals(RuleParser.isValid(json), (boolean) expected);
     }
 
     @DataProvider(name = "lookUpRuleForTestcase")
@@ -128,7 +128,7 @@ public class JsonUtilTest {
 
     @Test(dataProvider = "lookUpRuleForTestcase")
     public void lookUpRuleForTestcase(JsonNode expect, JsonNode testcase, String expected) {
-        Assert.assertEquals(JsonUtil.lookUpRuleForTestcase(testcase, expect).toString(), expected);
+        Assert.assertEquals(RuleParser.lookUpRuleForTestcase(testcase, expect).toString(), expected);
     }
 
     @DataProvider(name = "convertToObjectMatrix")
@@ -176,7 +176,7 @@ public class JsonUtilTest {
     @Test(dataProvider = "convertToObjectMatrix")
     public void convertToObjectMatrix(JsonNode testCases, JsonNode expect, Object[][] expected) {
         Assert.assertNotNull(testCases);
-        Object[][] actual = JsonUtil.convertToObjectMatrix(testCases, expect);
+        Object[][] actual = RuleParser.convertToObjectMatrix(testCases, expect);
 
         Assert.assertEquals(actual.length, expected.length);
 

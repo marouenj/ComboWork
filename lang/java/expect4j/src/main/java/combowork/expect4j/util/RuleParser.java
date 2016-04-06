@@ -15,21 +15,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Utility for {@link JsonNode}
+ * Utilities for parsing rules and expected results
  *
  * @author marouenj
  */
-public class JsonUtil {
+public class RuleParser {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(JsonUtil.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(RuleParser.class);
 
     private final static ObjectMapper MAPPER = new ObjectMapper();
 
-    // TODO make this public in load4j
+    // TODO move to a common lib
     private final static String VALS_KEY = "Case";
 
     /**
-     * List of log messages intrinsic to {@link JsonUtil}
+     * List of log messages intrinsic to {@link RuleParser}
      */
     private enum LogMessages {
         UNABLE_TO_OPEN_FILE("Unable to open file, %s"),
@@ -51,6 +51,7 @@ public class JsonUtil {
         }
     }
 
+    // TODO move to a common lib
     public static JsonNode fromFile(File file) {
         String path = file.getPath();
         String text;
@@ -71,6 +72,7 @@ public class JsonUtil {
         return fromText(text, path);
     }
 
+    // TODO move to a common lib
     private static JsonNode fromText(String text, String path) {
         JsonNode tree;
         try {
@@ -84,6 +86,12 @@ public class JsonUtil {
         return tree;
     }
 
+    /**
+     * Validate rule file
+     *
+     * @param root rule file in a {@link JsonNode} format
+     * @return Whether is valid or not
+     */
     public static boolean isValid(JsonNode root) {
         if (root == null || root.getNodeType() != JsonNodeType.OBJECT) {
             return false;
@@ -142,10 +150,17 @@ public class JsonUtil {
         return true;
     }
 
-    private static ArrayList<JsonNodeType> pattern(JsonNode vals) {
-        ArrayList<JsonNodeType> pattern = new ArrayList<>(vals.size());
+    /**
+     * Infer the pattern of the expected vals from the default instance
+     * Subsequent expected vals should be conform to the pattern, otherwise the structure is considered invalid
+     *
+     * @param whatToExpect
+     * @return Pattern of the expected vals
+     */
+    private static ArrayList<JsonNodeType> pattern(JsonNode whatToExpect) {
+        ArrayList<JsonNodeType> pattern = new ArrayList<>(whatToExpect.size());
 
-        for (JsonNode val : vals) {
+        for (JsonNode val : whatToExpect) {
             if (val.getNodeType() == JsonNodeType.BOOLEAN
                     || val.getNodeType() == JsonNodeType.NUMBER
                     || val.getNodeType() == JsonNodeType.STRING
@@ -157,6 +172,43 @@ public class JsonUtil {
         }
 
         return pattern;
+    }
+
+    /**
+     * Combine test cases and expected values in a {@link Object}[][]
+     *
+     * @param testCases
+     * @param expected
+     * @return A view of the test cases and their respective expected vals
+     */
+    public static Object[][] convertToObjectMatrix(JsonNode testCases, JsonNode expected) {
+        int nbreTestCases = testCases.size();
+        int nbreVals = testCases.get(0).get(VALS_KEY).size();
+
+        int nbreExpected = expected.get("default").size();
+
+
+        Object[][] view = new Object[nbreTestCases][nbreVals + nbreExpected];
+
+        int i = -1;
+        for (JsonNode testCase : testCases) {
+            i++;
+            JsonNode vals = testCase.get("Case");
+
+            int j = -1;
+            for (JsonNode val : vals) {
+                j++;
+                view[i][j] = jsonToJavaType(val);
+            }
+
+            JsonNode rule = lookUpRuleForTestcase(vals, expected);
+            for (JsonNode val : rule) {
+                j++;
+                view[i][j] = jsonToJavaType(val);
+            }
+        }
+
+        return view;
     }
 
     /**
@@ -206,36 +258,7 @@ public class JsonUtil {
         return match;
     }
 
-    public static Object[][] convertToObjectMatrix(JsonNode testCases, JsonNode expected) {
-        int nbreTestCases = testCases.size();
-        int nbreVals = testCases.get(0).get(VALS_KEY).size();
-
-        int nbreExpected = expected.get("default").size();
-
-
-        Object[][] view = new Object[nbreTestCases][nbreVals + nbreExpected];
-
-        int i = -1;
-        for (JsonNode testCase : testCases) {
-            i++;
-            JsonNode vals = testCase.get("Case");
-
-            int j = -1;
-            for (JsonNode val : vals) {
-                j++;
-                view[i][j] = jsonToJavaType(val);
-            }
-
-            JsonNode rule = lookUpRuleForTestcase(vals, expected);
-            for (JsonNode val : rule) {
-                j++;
-                view[i][j] = jsonToJavaType(val);
-            }
-        }
-
-        return view;
-    }
-
+    // TODO move to a common lib
     private static Object jsonToJavaType(JsonNode node) {
         if (node.isNumber()) {
             return node.numberValue();
