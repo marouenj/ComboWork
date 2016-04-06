@@ -71,46 +71,6 @@ public class RuleParserTest {
         Assert.assertEquals(RuleParser.isValid(json), (boolean) expected);
     }
 
-    @DataProvider(name = "lookUpRuleForTestcase")
-    public Object[][] lookUpRuleForTestcase() throws InvocationTargetException, IllegalAccessException {
-        String[] expect = new String[]{
-                "{\"default\":[1]}",
-                "{\"default\":[1],\"override\":[{\"rule\":[{}, {}, {}, 2],\"action\":[2]}]}",
-                "{\"default\":[1],\"override\":[{\"rule\":[{}, {}, {}, 2],\"action\":[2]},{\"rule\":[{}, {}, {}, null],\"action\":[3]}]}",
-                "{\"default\":[1],\"override\":[{\"rule\":[{}, {}, {}, 2],\"action\":[2]},{\"rule\":[{}, {}, {}, null],\"action\":[3]},{\"rule\":[{}, \"str\", {}, null],\"action\":[4]}]}",
-        };
-
-        String[] testcase = new String[]{
-                "[1, \"str\", true, null]",
-                "[1, \"str\", true, null]",
-                "[1, \"str\", true, null]",
-                "[1, \"str\", true, null]",
-        };
-
-        String[] expected = new String[]{
-                "[1]",
-                "[1]",
-                "[3]",
-                "[4]",
-        };
-
-        Object[][] data = new Object[expect.length][];
-        for (int i = 0; i < data.length; i++) {
-            data[i] = new Object[]{
-                    fromText.invoke(null, expect[i], null),
-                    fromText.invoke(null, testcase[i], null),
-                    expected[i],
-            };
-        }
-
-        return data;
-    }
-
-    @Test(dataProvider = "lookUpRuleForTestcase")
-    public void lookUpRuleForTestcase(JsonNode expect, JsonNode testcase, String expected) {
-        Assert.assertEquals(RuleParser.lookUpRuleForTestcase(testcase, expect).toString(), expected);
-    }
-
     @DataProvider(name = "convertToObjectMatrix")
     public Object[][] convertToObjectMatrix() throws InvocationTargetException, IllegalAccessException {
         String[] testCases = new String[]{
@@ -178,4 +138,43 @@ public class RuleParserTest {
         }
     }
 
+    @DataProvider(name = "lookUpRuleForTestcase")
+    public Object[][] lookUpRuleForTestcase() throws InvocationTargetException, IllegalAccessException {
+        String[] expect = new String[]{
+                "{\"default\":[1]}",
+                "{\"default\":[1],\"override\":[{\"rule\":[{}, {}, {}, 2],\"action\":[2]}]}",
+                "{\"default\":[1],\"override\":[{\"rule\":[{}, {}, {}, 2],\"action\":[2]},{\"rule\":[{}, {}, {}, null],\"action\":[3]}]}",
+                "{\"default\":[1],\"override\":[{\"rule\":[{}, {}, {}, 2],\"action\":[2]},{\"rule\":[{}, {}, {}, null],\"action\":[3]},{\"rule\":[{}, \"str\", {}, null],\"action\":[4]}]}",
+        };
+
+        String[] testcase = new String[]{
+                "[1, \"str\", true, null]",
+                "[1, \"str\", true, null]",
+                "[1, \"str\", true, null]",
+                "[1, \"str\", true, null]",
+        };
+
+        String[] expected = new String[]{
+                "[1]",
+                "[1]",
+                "[3]",
+                "[4]",
+        };
+
+        Object[][] data = new Object[expect.length][];
+        for (int i = 0; i < data.length; i++) {
+            data[i] = new Object[]{
+                    fromText.invoke(null, expect[i], null),
+                    fromText.invoke(null, testcase[i], null),
+                    expected[i],
+            };
+        }
+
+        return data;
+    }
+
+    @Test(dataProvider = "lookUpRuleForTestcase")
+    public void lookUpRuleForTestcase(JsonNode expect, JsonNode testcase, String expected) {
+        Assert.assertEquals(RuleParser.lookUpRuleForTestcase(testcase, expect).toString(), expected);
+    }
 }
