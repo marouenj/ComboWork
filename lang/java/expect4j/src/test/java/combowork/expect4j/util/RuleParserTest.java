@@ -2,6 +2,7 @@ package combowork.expect4j.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import combowork.common.JsonUtil;
 import org.apache.commons.io.IOUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -88,7 +89,7 @@ public class RuleParserTest {
                 int k = -1;
                 for (JsonNode val : expect) {
                     k++;
-                    expected[j][k] = jsonToJavaType(val);
+                    expected[j][k] = JsonUtil.jsonToJavaType(val);
                 }
             }
 
@@ -151,31 +152,5 @@ public class RuleParserTest {
     @Test(dataProvider = "lookUpRuleForTestcase")
     public void lookUpRuleForTestcase(JsonNode testcase, JsonNode expect, String expected) {
         Assert.assertEquals(RuleParser.lookUpRuleForTestcase(testcase, expect).toString(), expected);
-    }
-
-    /**
-     * Utility used to map Json types to Java types
-     *
-     * @param node Json-typed value
-     * @return Java-typed value
-     */
-    private static Object jsonToJavaType(JsonNode node) {
-        if (node.isNumber()) {
-            return node.numberValue();
-        }
-
-        if (node.isBoolean()) {
-            return node.asBoolean();
-        }
-
-        if (node.isTextual()) {
-            return node.asText();
-        }
-
-        if (node.isNull()) {
-            return null;
-        }
-
-        throw new RuntimeException();
     }
 }

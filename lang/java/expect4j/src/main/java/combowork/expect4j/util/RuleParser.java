@@ -1,16 +1,10 @@
 package combowork.expect4j.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import combowork.common.Config;
+import combowork.common.JsonUtil;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,71 +14,6 @@ import java.util.List;
  * @author marouenj
  */
 public class RuleParser {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(RuleParser.class);
-
-    private final static ObjectMapper MAPPER = new ObjectMapper();
-
-    // TODO move to a common lib
-    private final static String VALS_KEY = "Case";
-
-    /**
-     * List of log messages intrinsic to {@link RuleParser}
-     */
-    private enum LogMessages {
-        UNABLE_TO_OPEN_FILE("Unable to open file, %s"),
-        UNABLE_TO_CONVERT_STREAM_TO_STRING("Unable to convert Stream to String in, %s"),
-        UNABLE_TO_PARSE_JSON("Unable to parse json tree. Json file is, %s");
-
-        private final String text;
-
-        LogMessages(String text) {
-            this.text = text;
-        }
-
-        public String getText() {
-            return this.text;
-        }
-
-        public String getText(String... vals) {
-            return String.format(getText(), vals);
-        }
-    }
-
-    // TODO move to a common lib
-    public static JsonNode fromFile(File file) {
-        String path = file.getPath();
-        String text;
-        try {
-            text = IOUtils.toString(new FileReader(file));
-        } catch (IOException e) {
-            if (e instanceof FileNotFoundException) {
-                String msg = LogMessages.UNABLE_TO_OPEN_FILE.getText(path);
-                LOGGER.error(msg);
-                throw new RuntimeException(msg);
-            } else {
-                String msg = LogMessages.UNABLE_TO_CONVERT_STREAM_TO_STRING.getText(path);
-                LOGGER.error(msg);
-                throw new RuntimeException(msg);
-            }
-        }
-
-        return fromText(text, path);
-    }
-
-    // TODO move to a common lib
-    private static JsonNode fromText(String text, String path) {
-        JsonNode tree;
-        try {
-            tree = MAPPER.readTree(text);
-        } catch (IOException e) {
-            String msg = LogMessages.UNABLE_TO_PARSE_JSON.getText(path);
-            LOGGER.error(msg);
-            throw new RuntimeException(msg);
-        }
-
-        return tree;
-    }
 
     /**
      * Validate rule file
@@ -154,7 +83,6 @@ public class RuleParser {
      * Infer the pattern of the expected vals from the default instance
      * Subsequent expected vals should be conform to the pattern, otherwise the structure is considered invalid
      *
-     * @param whatToExpect
      * @return Pattern of the expected vals
      */
     private static ArrayList<JsonNodeType> pattern(JsonNode whatToExpect) {
@@ -177,13 +105,11 @@ public class RuleParser {
     /**
      * Combine test cases and expected values in a {@link Object}[][]
      *
-     * @param testCases
-     * @param expected
      * @return A view of the test cases and their respective expected vals
      */
     public static Object[][] convertToObjectMatrix(JsonNode testCases, JsonNode expected) {
         int nbreTestCases = testCases.size();
-        int nbreVals = testCases.get(0).get(VALS_KEY).size();
+        int nbreVals = testCases.get(0).get(Config.KEY_TEST_CASE_VALS).size();
 
         int nbreExpected = expected.get("default").size();
 
@@ -198,13 +124,13 @@ public class RuleParser {
             int j = -1;
             for (JsonNode val : vals) {
                 j++;
-                view[i][j] = jsonToJavaType(val);
+                view[i][j] = JsonUtil.jsonToJavaType(val);
             }
 
             JsonNode rule = lookUpRuleForTestcase(vals, expected);
             for (JsonNode val : rule) {
                 j++;
-                view[i][j] = jsonToJavaType(val);
+                view[i][j] = JsonUtil.jsonToJavaType(val);
             }
         }
 
@@ -256,26 +182,5 @@ public class RuleParser {
         }
 
         return match;
-    }
-
-    // TODO move to a common lib
-    private static Object jsonToJavaType(JsonNode node) {
-        if (node.isNumber()) {
-            return node.numberValue();
-        }
-
-        if (node.isBoolean()) {
-            return node.asBoolean();
-        }
-
-        if (node.isTextual()) {
-            return node.asText();
-        }
-
-        if (node.isNull()) {
-            return null;
-        }
-
-        throw new RuntimeException();
     }
 }

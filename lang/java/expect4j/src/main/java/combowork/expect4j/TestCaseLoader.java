@@ -1,6 +1,7 @@
 package combowork.expect4j;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import combowork.common.JsonUtil;
 import combowork.expect4j.util.RuleParser;
 
 import java.io.File;
@@ -89,7 +90,7 @@ public final class TestCaseLoader {
     public static Object[][] testNgAdapter(File load4j, File expect4j) {
         JsonNode testCases = combowork.load4j.TestCaseAdapter.asIs(load4j);
         try {
-            JsonNode expected = RuleParser.fromFile(expect4j);
+            JsonNode expected = JsonUtil.fromFile(expect4j);
             if (!RuleParser.isValid(testCases)) {
                 throw new RuntimeException();
             }
