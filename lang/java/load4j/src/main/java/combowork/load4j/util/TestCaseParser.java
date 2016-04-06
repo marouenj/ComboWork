@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Utility for {@link JsonNode}
+ * Utilities for parsing test cases file
  *
  * @author marouenj
  */
@@ -25,6 +25,7 @@ public class TestCaseParser {
 
     private final static ObjectMapper MAPPER = new ObjectMapper();
 
+    // TODO move to a common lib
     private final static String VALS_KEY = "Case";
 
     /**
@@ -51,6 +52,7 @@ public class TestCaseParser {
         }
     }
 
+    // TODO move to a common lib
     /**
      * Load a ComboWork test suite from a file into a {@link JsonNode}
      *
@@ -78,6 +80,7 @@ public class TestCaseParser {
         return fromText(text, path);
     }
 
+    // TODO move to a common lib
     /**
      * Parse a test suite in text into a {@link JsonNode}
      *
@@ -209,6 +212,7 @@ public class TestCaseParser {
         return view;
     }
 
+    // TODO move to a common lib
     /**
      * Json to Java type mapper
      *
