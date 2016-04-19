@@ -1,0 +1,36 @@
+[
+   {
+      "name":"fname",
+      "vals":[
+         "John",
+         "Jon",
+         "Joh",
+         ""
+      ]
+   },
+   {
+      "name":"lname",
+      "vals":[
+         "Doe",
+         "Do",
+         ""
+      ]
+   },
+   {
+      "name":"sex",
+      "vals":[
+         "Male",
+         "Mle",
+         "Female",
+         ""
+      ]
+   },
+   {
+      "name":"age",
+      "vals":[
+         10,
+         -1,
+         1000
+      ]
+   }
+]

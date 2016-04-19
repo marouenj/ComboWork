@@ -1,0 +1,12 @@
+[
+   {
+      "action":"discard",
+      "rule":[
+         "John",
+         "*",
+         "Female",
+         "*",
+         "*"
+      ]
+   }
+]
