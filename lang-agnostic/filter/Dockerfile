@@ -5,7 +5,7 @@ MAINTAINER marouenj
 RUN mkdir /app
 RUN mkdir /files
 
-COPY src /app
+COPY *.py /app/
 
 WORKDIR /files
 
