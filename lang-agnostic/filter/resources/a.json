@@ -3,8 +3,6 @@
       "name":"fname",
       "vals":[
          "John",
-         "Jon",
-         "Joh",
          ""
       ]
    },
@@ -12,7 +10,6 @@
       "name":"lname",
       "vals":[
          "Doe",
-         "Do",
          ""
       ]
    },
@@ -20,7 +17,6 @@
       "name":"sex",
       "vals":[
          "Male",
-         "Mle",
          "Female",
          ""
       ]
