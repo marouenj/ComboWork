@@ -46,7 +46,7 @@ class FilterTest(unittest.TestCase):
             [[1, 2, 3], [1, 2, 3, 4], action_discard, 1],
             # test case 9
             [[1, 2, 3, 4], [1, 2, 3], action_keep, 0],
-             # test case 10
+            # test case 10
             [[1, 2, 3, 4], [1, 2, 3], action_discard, 1]
         ]
         for v in testcases:
