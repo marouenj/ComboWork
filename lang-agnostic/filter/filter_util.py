@@ -31,9 +31,9 @@ def keep(case, rule, action):
     return keep
 
 
-def vals_is_valid(vals):
+def test_cases_are_valid(vals):
     return 1
 
 
-def filter_is_valid(vals):
+def filters_are_valid(vals):
     return 1
