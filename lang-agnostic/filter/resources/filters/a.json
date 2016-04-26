@@ -2,10 +2,18 @@
    {
       "action":"discard",
       "rule":[
+         "*",
+         "*",
+         "*",
+         -1
+      ]
+   },
+   {
+      "action":"discard",
+      "rule":[
          "John",
          "*",
          "Female",
-         "*",
          "*"
       ]
    }
