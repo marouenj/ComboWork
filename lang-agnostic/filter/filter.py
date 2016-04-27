@@ -16,12 +16,8 @@ parser.add_argument('--filtered', dest='filtered')
 args = parser.parse_args()
 
 # get the list of test cases
-files = [
-    f for f in os.listdir(
-        args.combined) if os.path.isfile(
-            os.path.join(
-                args.combined,
-                f))]
+files = [f for f in os.listdir(args.combined)
+         if os.path.isfile(os.path.join(args.combined, f))]
 
 for f in files:
     # load the test cases
