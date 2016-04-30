@@ -9,4 +9,4 @@ COPY *.py /app/
 
 WORKDIR /files
 
-CMD ["python", "/app/interpolate.py", "--combined=combined", "--templates=templates", "--filtered=filtered"]
+CMD ["python", "/app/interpolate.py", "--combined=combined", "--templates=templates", "--interpolated=interpolated"]
