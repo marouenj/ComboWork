@@ -1,0 +1,23 @@
+######
+# up #
+######
+
+./start.master.sh
+
+./start.slave1.sh
+./start.slave2.sh
+
+./start.sentinel1.sh
+./start.sentinel2.sh
+./start.sentinel3.sh
+
+########
+# kill #
+########
+
+$1./kill.slave1.sh
+$2./kill.slave2.sh
+
+$3./kill.sentinel1.sh
+$4./kill.sentinel2.sh
+$5./kill.sentinel3.sh
