@@ -5,7 +5,7 @@ MAINTAINER marouenj
 RUN mkdir /app
 RUN mkdir /files
 
-COPY ./bin/combine /app/combine
+COPY ./combine /app/combine
 ENV PATH $PATH:/app
 
 WORKDIR /files
