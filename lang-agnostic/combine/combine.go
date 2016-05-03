@@ -10,7 +10,7 @@ import (
 	"sort"
 	"strings"
 
-	"testsuite"
+	"github.com/marouenj/ComboWork/lang-agnostic/combine/testsuite"
 )
 
 const (

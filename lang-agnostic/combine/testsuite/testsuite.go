@@ -7,7 +7,7 @@ import (
 	"math"
 	"os"
 
-	"bitutil"
+	"github.com/marouenj/ComboWork/lang-agnostic/combine/bitutil"
 )
 
 type TestTemplate struct {
