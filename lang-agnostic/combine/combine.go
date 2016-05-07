@@ -10,7 +10,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/marouenj/ComboWork/lang-agnostic/combine/testsuite"
+	"github.com/marouenj/ComboWork/lang-agnostic/combine/combiner"
 )
 
 const (
@@ -114,16 +114,16 @@ func forEachFile(subpath string, name string) error {
 		return fmt.Errorf("Error reading '%s': %s", in, err)
 	}
 
-	var ttemp []testsuite.TestTemplate
+	var ttemp []combiner.TestTemplate
 
 	err = json.Unmarshal(file, &ttemp)
 	if err != nil {
 		fmt.Errorf("Error decoding '%s': %s", in, err)
 	}
 
-	vals, bits := testsuite.Flatten(ttemp)
+	vals, bits := combiner.Flatten(ttemp)
 
-	var tcase []byte = testsuite.GoCaseByCase(vals, bits)
+	var tcase []byte = combiner.GoCaseByCase(vals, bits)
 
 	out := filepath.Join(strings.Join([]string{subpath, combined, name}, "/"))
 	err = ioutil.WriteFile(out, tcase, 0666)

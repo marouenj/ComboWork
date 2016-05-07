@@ -4,6 +4,6 @@ docker run \
        --rm \
        --name go \
        -v $(pwd)/bitutil:/go/src/github.com/marouenj/ComboWork/lang-agnostic/combine/bitutil \
-       -v $(pwd)/testsuite:/go/src/github.com/marouenj/ComboWork/lang-agnostic/combine/testsuite \
+       -v $(pwd)/combiner:/go/src/github.com/marouenj/ComboWork/lang-agnostic/combine/combiner \
 golang:1.6 \
 go build ./...

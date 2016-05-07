@@ -1,4 +1,4 @@
-package testsuite
+package combiner
 
 import (
 	"container/list"
