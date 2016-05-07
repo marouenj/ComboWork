@@ -10,7 +10,7 @@ import (
 	"github.com/marouenj/ComboWork/lang-agnostic/combine/bitutil"
 )
 
-type TestTemplate struct {
+type Var struct {
 	Prefix string
 	Suffix string
 	Name   string
@@ -22,17 +22,17 @@ type Testsuite struct {
 	Case []interface{}
 }
 
-func CastInterfaceToTestTemplate(vals []interface{}) []TestTemplate {
+func CastInterfaceToTestTemplate(vals []interface{}) []Var {
 	if vals == nil {
 		return nil
 	}
 
-	t_arr := make([]TestTemplate, len(vals))
+	t_arr := make([]Var, len(vals))
 
 	for key, val := range vals {
 		var val2 = val.(map[string]interface{})
 
-		var t TestTemplate
+		var t Var
 		switch val2["prefix"].(type) {
 		case string:
 			t.Prefix = val2["prefix"].(string)
@@ -52,7 +52,7 @@ func CastInterfaceToTestTemplate(vals []interface{}) []TestTemplate {
 }
 
 /*
-func DumpVals(t []TestTemplate) {
+func DumpVals(t []Var) {
 	if t == nil {
 		return;
 	}
@@ -72,7 +72,7 @@ func DumpVals(t []TestTemplate) {
 */
 
 /*
-func NumVars(t []TestTemplate) uint16 {
+func NumVars(t []Var) uint16 {
 	if t == nil {
 		return 0
 	}
@@ -100,7 +100,7 @@ func NumVars(t []TestTemplate) uint16 {
 // index i refers to var i (order established by the in order traversal of the json structure)
 // list 1 stores for each var i its respective vals
 // list 2 stores for each var i the number of bits needed to represent the number of vals
-func Flatten(t []TestTemplate) (*list.List, *list.List) {
+func Flatten(t []Var) (*list.List, *list.List) {
 	if t == nil {
 		return nil, nil
 	}

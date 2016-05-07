@@ -114,7 +114,7 @@ func forEachFile(subpath string, name string) error {
 		return fmt.Errorf("Error reading '%s': %s", in, err)
 	}
 
-	var ttemp []combiner.TestTemplate
+	var ttemp []combiner.Var
 
 	err = json.Unmarshal(file, &ttemp)
 	if err != nil {
