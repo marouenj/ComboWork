@@ -17,17 +17,19 @@ type Var struct {
 	Vals   []interface{}
 }
 
+type Vars []Var
+
 type Testsuite struct {
 	Num  float64
 	Case []interface{}
 }
 
-func CastInterfaceToTestTemplate(vals []interface{}) []Var {
+func CastInterfaceToTestTemplate(vals []interface{}) Vars {
 	if vals == nil {
 		return nil
 	}
 
-	t_arr := make([]Var, len(vals))
+	t_arr := make(Vars, len(vals))
 
 	for key, val := range vals {
 		var val2 = val.(map[string]interface{})
@@ -52,7 +54,7 @@ func CastInterfaceToTestTemplate(vals []interface{}) []Var {
 }
 
 /*
-func DumpVals(t []Var) {
+func DumpVals(t Vars) {
 	if t == nil {
 		return;
 	}
@@ -72,7 +74,7 @@ func DumpVals(t []Var) {
 */
 
 /*
-func NumVars(t []Var) uint16 {
+func NumVars(t Vars) uint16 {
 	if t == nil {
 		return 0
 	}
@@ -100,7 +102,7 @@ func NumVars(t []Var) uint16 {
 // index i refers to var i (order established by the in order traversal of the json structure)
 // list 1 stores for each var i its respective vals
 // list 2 stores for each var i the number of bits needed to represent the number of vals
-func Flatten(t []Var) (*list.List, *list.List) {
+func Flatten(t Vars) (*list.List, *list.List) {
 	if t == nil {
 		return nil, nil
 	}
