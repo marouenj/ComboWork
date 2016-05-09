@@ -11,10 +11,7 @@ import (
 )
 
 type Var struct {
-	Prefix string
-	Suffix string
-	Name   string
-	Vals   []interface{}
+	Vals []interface{}
 }
 
 type Vars []Var
@@ -24,33 +21,19 @@ type Testsuite struct {
 	Case []interface{}
 }
 
-func CastInterfaceToTestTemplate(vals []interface{}) Vars {
+// when Var.Vals is a complex object (of type Vars)
+func castInterfaceToVar(vals []interface{}) Vars {
 	if vals == nil {
 		return nil
 	}
 
-	t_arr := make(Vars, len(vals))
-
-	for key, val := range vals {
-		var val2 = val.(map[string]interface{})
-
-		var t Var
-		switch val2["prefix"].(type) {
-		case string:
-			t.Prefix = val2["prefix"].(string)
-		}
-		switch val2["suffix"].(type) {
-		case string:
-			t.Suffix = val2["suffix"].(string)
-		}
-		switch val2["name"].(type) {
-		case string:
-			t.Name = val2["name"].(string)
-		}
-		t.Vals = val2["vals"].([]interface{})
-		t_arr[key] = t
+	vars := make(Vars, len(vals))
+	for idx, _ := range vals {
+		var val = vals[idx].(map[string]interface{})
+		vars[idx].Vals = val["vals"].([]interface{})
 	}
-	return t_arr
+
+	return vars
 }
 
 /*
@@ -64,7 +47,7 @@ func DumpVals(t Vars) {
 
 		switch val.Vals[0].(type) {
 		case map[string]interface{}:
-			t_sub := CastInterfaceToTestTemplate(val.Vals)
+			t_sub := castInterfaceToVar(val.Vals)
 			DumpVals(t_sub)
 		default:
 			fmt.Println(val.Vals)
@@ -84,7 +67,7 @@ func NumVars(t Vars) uint16 {
 	for _, val := range t {
 		switch val.Vals[0].(type) {
 		case map[string]interface{}:
-			t_sub := CastInterfaceToTestTemplate(val.Vals)
+			t_sub := castInterfaceToVar(val.Vals)
 			card += NumVars(t_sub)
 		default:
 			card++;
@@ -117,7 +100,7 @@ func Flatten(t Vars) (*list.List, *list.List) {
 
 		switch val.Vals[0].(type) {
 		case map[string]interface{}:
-			sub_t := CastInterfaceToTestTemplate(val.Vals)
+			sub_t := castInterfaceToVar(val.Vals)
 			v, b := Flatten(sub_t)
 			vals.PushBackList(v)
 			numBits.PushBackList(b)
