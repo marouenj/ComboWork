@@ -17,18 +17,16 @@ const (
 	combined string = "combined"
 )
 
-type dirEnts []os.FileInfo
+type dirEntries []os.FileInfo
 
-// Implement the sort interface for dirEnts
-func (d dirEnts) Len() int {
+// Implement the sort interface for dirEntries
+func (d dirEntries) Len() int {
 	return len(d)
 }
-
-func (d dirEnts) Less(i, j int) bool {
+func (d dirEntries) Less(i, j int) bool {
 	return d[i].Name() < d[j].Name()
 }
-
-func (d dirEnts) Swap(i, j int) {
+func (d dirEntries) Swap(i, j int) {
 	d[i], d[j] = d[j], d[i]
 }
 
@@ -85,7 +83,7 @@ func main() {
 		}
 
 		// sort the contents, ensures lexical order
-		sort.Sort(dirEnts(contents))
+		sort.Sort(dirEntries(contents))
 
 		for _, fi := range contents {
 			// don't recursively read contents
