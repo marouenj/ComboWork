@@ -90,7 +90,7 @@ func GoCaseByCase(vals *list.List, bits *list.List) []byte {
 
 	caseIdx := 0
 	for idx := 0; idx < int(math.Pow(2, float64(bitNum))); idx++ {
-		caseVals := Filter(idx, vals, bits)
+		caseVals := filter(idx, vals, bits)
 		if caseVals != nil {
 			var t Testsuite
 			t.Num = float64(caseIdx + 1)
@@ -110,7 +110,7 @@ func GoCaseByCase(vals *list.List, bits *list.List) []byte {
 	return backToJson
 }
 
-func Filter(idx int, vals, bits *list.List) []interface{} {
+func filter(idx int, vals, bits *list.List) []interface{} {
 	if vals == nil || bits == nil {
 		return nil
 	}
