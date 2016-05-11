@@ -92,6 +92,8 @@ func main() {
 
 func forEachFile(baseDir string, name string) error {
 	in := filepath.Join(baseDir, name)
+	out := filepath.Join(baseDir, combined, name)
+
 	file, err := ioutil.ReadFile(in)
 	if err != nil {
 		return fmt.Errorf("[ERR] Unable to read '%s': %v", in, err)
@@ -108,7 +110,6 @@ func forEachFile(baseDir string, name string) error {
 
 	var tcase []byte = combiner.GoCaseByCase(vals, bits)
 
-	out := filepath.Join(strings.Join([]string{baseDir, combined, name}, "/"))
 	err = ioutil.WriteFile(out, tcase, 0666)
 	if err != nil {
 		return fmt.Errorf("[ERR] Unable to write to '%s': %v", out, err)
