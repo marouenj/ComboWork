@@ -61,14 +61,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	// get file info
-	_, err = f.Stat()
-	if err != nil {
-		f.Close()
-		fmt.Printf("[ERR] Unable to read '%s': %v\n", *baseDir, err)
-		os.Exit(1)
-	}
-
 	contents, err := f.Readdir(-1)
 	f.Close()
 	if err != nil {
