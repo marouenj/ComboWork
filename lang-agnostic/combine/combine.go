@@ -35,19 +35,21 @@ func main() {
 	baseDir := flag.String("base_dir", "./", "")
 	flag.Parse()
 
+	out := filepath.Join(*baseDir, combined)
+
 	// check output dir exists or not
-	info, err := os.Stat(combined)
+	info, err := os.Stat(out)
 	if err != nil {
 		if os.IsNotExist(err) {
-			err := os.Mkdir(combined, os.ModeDir|os.ModePerm)
+			err := os.Mkdir(out, os.ModeDir|os.ModePerm)
 			if err != nil {
-				fmt.Printf("Error creating dir '%s': %s\n", combined, err)
+				fmt.Printf("Error creating dir '%s': %s\n", out, err)
 				os.Exit(1)
 			}
 		}
 	} else {
 		if !info.IsDir() {
-			fmt.Printf("'%s' exists as a file (not dir)\n", combined)
+			fmt.Printf("'%s' exists as a file (not dir)\n", out)
 			os.Exit(1)
 		}
 	}
