@@ -54,7 +54,7 @@ func main() {
 		}
 	}
 
-	// open file
+	// open base dir
 	f, err := os.Open(*baseDir)
 	if err != nil {
 		fmt.Printf("[ERR] Unable to read '%s': %v\n", *baseDir, err)
