@@ -43,13 +43,13 @@ func main() {
 		if os.IsNotExist(err) {
 			err := os.Mkdir(out, os.ModeDir|os.ModePerm)
 			if err != nil {
-				fmt.Printf("Error creating dir '%s': %s\n", out, err)
+				fmt.Printf("[ERR] Unable to create dir '%s': %v\n", out, err)
 				os.Exit(1)
 			}
 		}
 	} else {
 		if !info.IsDir() {
-			fmt.Printf("'%s' exists as a file (not dir)\n", out)
+			fmt.Printf("[ERR] '%s' exists as a file (not dir)\n", out)
 			os.Exit(1)
 		}
 	}
@@ -57,7 +57,7 @@ func main() {
 	// open file
 	f, err := os.Open(*baseDir)
 	if err != nil {
-		fmt.Printf("Error reading '%s': %s\n", *baseDir, err)
+		fmt.Printf("[ERR] Unable to read '%s': %v\n", *baseDir, err)
 		os.Exit(1)
 	}
 
@@ -65,14 +65,14 @@ func main() {
 	_, err = f.Stat()
 	if err != nil {
 		f.Close()
-		fmt.Printf("Error reading '%s': %s\n", *baseDir, err)
+		fmt.Printf("[ERR] Unable to read '%s': %v\n", *baseDir, err)
 		os.Exit(1)
 	}
 
 	contents, err := f.Readdir(-1)
 	f.Close()
 	if err != nil {
-		fmt.Printf("Error reading '%s': %s\n", *baseDir, err)
+		fmt.Printf("[ERR] Unable to list files under '%s': %v\n", *baseDir, err)
 		os.Exit(1)
 	}
 
@@ -92,7 +92,7 @@ func main() {
 
 		err = forEachFile(*baseDir, fi.Name())
 		if err != nil {
-			fmt.Printf("Error combining '%s': %s\n", fi.Name(), err)
+			fmt.Printf("[ERR] Combining operation not run successfully '%s': %v\n", fi.Name(), err)
 			os.Exit(1)
 		}
 	}
@@ -102,14 +102,14 @@ func forEachFile(subpath string, name string) error {
 	in := filepath.Join(subpath, name)
 	file, err := ioutil.ReadFile(in)
 	if err != nil {
-		return fmt.Errorf("Error reading '%s': %s", in, err)
+		return fmt.Errorf("[ERR] Unable to read '%s': %v", in, err)
 	}
 
 	var ttemp []combiner.Var
 
 	err = json.Unmarshal(file, &ttemp)
 	if err != nil {
-		fmt.Errorf("Error decoding '%s': %s", in, err)
+		fmt.Errorf("[ERR] Unable to decode '%s': %v", in, err)
 	}
 
 	vals, bits := combiner.Flatten(ttemp)
@@ -119,7 +119,7 @@ func forEachFile(subpath string, name string) error {
 	out := filepath.Join(strings.Join([]string{subpath, combined, name}, "/"))
 	err = ioutil.WriteFile(out, tcase, 0666)
 	if err != nil {
-		return fmt.Errorf("Error writing '%s': %s", out, err)
+		return fmt.Errorf("[ERR] Unable to write to '%s': %v", out, err)
 	}
 
 	return nil
