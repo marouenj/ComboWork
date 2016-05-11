@@ -62,47 +62,38 @@ func main() {
 	}
 
 	// get file info
-	fi, err := f.Stat()
+	_, err = f.Stat()
 	if err != nil {
 		f.Close()
 		fmt.Printf("Error reading '%s': %s\n", *baseDir, err)
 		os.Exit(1)
 	}
 
-	if !fi.IsDir() { // is a file
-		err := forEachFile("./", *baseDir)
-		f.Close()
-		if err != nil {
-			fmt.Printf("Error combining '%s': %s\n", *baseDir, err)
-			os.Exit(1)
+	contents, err := f.Readdir(-1)
+	f.Close()
+	if err != nil {
+		fmt.Printf("Error reading '%s': %s\n", *baseDir, err)
+		os.Exit(1)
+	}
+
+	// sort the contents, ensures lexical order
+	sort.Sort(dirEntries(contents))
+
+	for _, fi := range contents {
+		// don't recursively read contents
+		if fi.IsDir() {
+			continue
 		}
-	} else { // is a dir
-		contents, err := f.Readdir(-1)
-		f.Close()
-		if err != nil {
-			fmt.Printf("Error reading '%s': %s\n", *baseDir, err)
-			os.Exit(1)
+
+		// if it's not a json file, ignore it
+		if !strings.HasSuffix(fi.Name(), ".json") {
+			continue
 		}
 
-		// sort the contents, ensures lexical order
-		sort.Sort(dirEntries(contents))
-
-		for _, fi := range contents {
-			// don't recursively read contents
-			if fi.IsDir() {
-				continue
-			}
-
-			// if it's not a json file, ignore it
-			if !strings.HasSuffix(fi.Name(), ".json") {
-				continue
-			}
-
-			err = forEachFile(*baseDir, fi.Name())
-			if err != nil {
-				fmt.Printf("Error combining '%s': %s\n", fi.Name(), err)
-				os.Exit(1)
-			}
+		err = forEachFile(*baseDir, fi.Name())
+		if err != nil {
+			fmt.Printf("Error combining '%s': %s\n", fi.Name(), err)
+			os.Exit(1)
 		}
 	}
 }
