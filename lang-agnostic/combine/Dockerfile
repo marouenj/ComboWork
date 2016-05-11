@@ -11,4 +11,4 @@ ENV PATH $PATH:/app
 WORKDIR /files
 
 ENTRYPOINT ["combine"]
-CMD ["--in=./"]
+CMD ["--base_dir=./"]
