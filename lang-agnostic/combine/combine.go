@@ -32,7 +32,7 @@ func (d dirEntries) Swap(i, j int) {
 
 func main() {
 	// parse args
-	in := flag.String("in", "./", "")
+	baseDir := flag.String("base_dir", "./", "")
 	flag.Parse()
 
 	// check output dir exists or not
@@ -53,9 +53,9 @@ func main() {
 	}
 
 	// open file
-	f, err := os.Open(*in)
+	f, err := os.Open(*baseDir)
 	if err != nil {
-		fmt.Printf("Error reading '%s': %s\n", *in, err)
+		fmt.Printf("Error reading '%s': %s\n", *baseDir, err)
 		os.Exit(1)
 	}
 
@@ -63,22 +63,22 @@ func main() {
 	fi, err := f.Stat()
 	if err != nil {
 		f.Close()
-		fmt.Printf("Error reading '%s': %s\n", *in, err)
+		fmt.Printf("Error reading '%s': %s\n", *baseDir, err)
 		os.Exit(1)
 	}
 
 	if !fi.IsDir() { // is a file
-		err := forEachFile("./", *in)
+		err := forEachFile("./", *baseDir)
 		f.Close()
 		if err != nil {
-			fmt.Printf("Error combining '%s': %s\n", *in, err)
+			fmt.Printf("Error combining '%s': %s\n", *baseDir, err)
 			os.Exit(1)
 		}
 	} else { // is a dir
 		contents, err := f.Readdir(-1)
 		f.Close()
 		if err != nil {
-			fmt.Printf("Error reading '%s': %s\n", *in, err)
+			fmt.Printf("Error reading '%s': %s\n", *baseDir, err)
 			os.Exit(1)
 		}
 
@@ -96,7 +96,7 @@ func main() {
 				continue
 			}
 
-			err = forEachFile(*in, fi.Name())
+			err = forEachFile(*baseDir, fi.Name())
 			if err != nil {
 				fmt.Printf("Error combining '%s': %s\n", fi.Name(), err)
 				os.Exit(1)
