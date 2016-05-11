@@ -32,7 +32,7 @@ func (d dirEntries) Swap(i, j int) {
 
 func main() {
 	// parse args
-	in := flag.String("in", "./vars.json", "")
+	in := flag.String("in", "./", "")
 	flag.Parse()
 
 	// check output dir exists or not
