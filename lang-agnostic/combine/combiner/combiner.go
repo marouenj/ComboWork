@@ -36,48 +36,6 @@ func castInterfaceToVar(vals []interface{}) Vars {
 	return vars
 }
 
-/*
-func DumpVals(t Vars) {
-	if t == nil {
-		return;
-	}
-
-	for key, val := range t {
-		fmt.Printf("%d prefix %s, suffix %s, name %s\n", key, val.Prefix, val.Suffix, val.Name)
-
-		switch val.Vals[0].(type) {
-		case map[string]interface{}:
-			t_sub := castInterfaceToVar(val.Vals)
-			DumpVals(t_sub)
-		default:
-			fmt.Println(val.Vals)
-		}
-	}
-}
-*/
-
-/*
-func NumVars(t Vars) uint16 {
-	if t == nil {
-		return 0
-	}
-
-	var card uint16 = 0;
-
-	for _, val := range t {
-		switch val.Vals[0].(type) {
-		case map[string]interface{}:
-			t_sub := castInterfaceToVar(val.Vals)
-			card += NumVars(t_sub)
-		default:
-			card++;
-		}
-	}
-
-	return card;
-}
-*/
-
 // the number of vars to test, their respective vals, and the number of bits needed to represent these vals; all these data are scattered in a hierarchical data structure (json)
 // this function flattens these data into two lists for an easy, repetitive processing later
 // the two returned lists should have the same length
