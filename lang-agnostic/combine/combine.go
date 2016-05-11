@@ -90,8 +90,8 @@ func main() {
 	}
 }
 
-func forEachFile(subpath string, name string) error {
-	in := filepath.Join(subpath, name)
+func forEachFile(baseDir string, name string) error {
+	in := filepath.Join(baseDir, name)
 	file, err := ioutil.ReadFile(in)
 	if err != nil {
 		return fmt.Errorf("[ERR] Unable to read '%s': %v", in, err)
@@ -108,7 +108,7 @@ func forEachFile(subpath string, name string) error {
 
 	var tcase []byte = combiner.GoCaseByCase(vals, bits)
 
-	out := filepath.Join(strings.Join([]string{subpath, combined, name}, "/"))
+	out := filepath.Join(strings.Join([]string{baseDir, combined, name}, "/"))
 	err = ioutil.WriteFile(out, tcase, 0666)
 	if err != nil {
 		return fmt.Errorf("[ERR] Unable to write to '%s': %v", out, err)
