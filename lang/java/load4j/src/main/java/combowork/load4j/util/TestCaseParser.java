@@ -20,7 +20,6 @@ public class TestCaseParser {
      *
      * @param testCases Test cases to be validated
      * @return Validation result
-     *
      */
     public static boolean isValid(JsonNode testCases) {
         if (testCases == null || testCases.size() == 0) {
