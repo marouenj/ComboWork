@@ -7,7 +7,7 @@
 
     <groupId>marouenj.combowork</groupId>
     <artifactId>load4j</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>load4j</name>
@@ -25,7 +25,7 @@
         <version.jmockit>1.21</version.jmockit>
         <version.mockito>1.10.19</version.mockito>
         <version.slf4j>1.7.14</version.slf4j>
-        <version.combowork.common>1.0.0-SNAPSHOT</version.combowork.common>
+        <version.combowork.common>1.0.0</version.combowork.common>
     </properties>
 
     <dependencies>
@@ -184,4 +184,15 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>repo</id>
+            <url>https://github.com/marouenj/mvn-repo/raw/master/releases</url>
+        </repository>
+        <repository>
+            <id>snapshot-repo</id>
+            <url>https://github.com/marouenj/mvn-repo/raw/master/snapshots</url>
+        </repository>
+    </repositories>
 </project>
