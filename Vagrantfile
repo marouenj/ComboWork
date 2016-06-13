@@ -4,7 +4,9 @@ Vagrant.configure("2") do |cluster|
         machine.vm.box = "ubuntu/trusty64"
         machine.vm.hostname = "combowork"
 
-        machine.vm.provision "docker", images: ["golang:1.6", "java:8-jre", "marouenj/autopep8:latest", "marouenj/maven:latest", "python:3.5"]
+        machine.vm.provision "docker", images: ["golang:1.6"]
+        machine.vm.provision "docker", images: ["java:8-jre"]
+        machine.vm.provision "docker", images: ["python:3.5", "marouenj/autopep8:latest"]
 
         machine.vm.provider "virtualbox" do |vbox|
             vbox.name = "combowork"
