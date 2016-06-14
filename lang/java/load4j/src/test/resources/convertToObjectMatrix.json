@@ -97,6 +97,27 @@
     ]
   },
   {
+    "desc": "one test case, one val (array)",
+    "in": [
+      {
+        "Case": [
+          [
+            1,
+            2
+          ]
+        ]
+      }
+    ],
+    "out": [
+      [
+        [
+          1,
+          2
+        ]
+      ]
+    ]
+  },
+  {
     "desc": "one test case, one val (null)",
     "in": [
       {

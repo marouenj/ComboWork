@@ -7,6 +7,7 @@ import combowork.common.JsonUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Utilities for parsing test cases file
@@ -66,6 +67,8 @@ public class TestCaseParser {
             }
         }
 
+        // TODO validate complex vals
+
         return true;
     }
 
@@ -101,6 +104,28 @@ public class TestCaseParser {
         }
 
         return pattern;
+    }
+
+    /**
+     * Validate a complex value (array)
+     *
+     * @param testCases Root for test cases
+     * @param valIdxes  Set of index to the complex vals
+     * @return True if all complex vals are valid
+     */
+    private static boolean isValidArr(JsonNodeType testCases, Set<Integer> valIdxes) {
+        return true;
+    }
+
+    /**
+     * Infer the pattern of the complex val from the first entry
+     * All subsequent entries will be checked against the pattern in {@link TestCaseParser#isValidArr(JsonNodeType, Set)}
+     *
+     * @param first First entry of the complex val to infer the pattern from
+     * @return Pattern
+     */
+    private static ArrayList<JsonNodeType> patternArr(JsonNode first) {
+        return null;
     }
 
     /**
