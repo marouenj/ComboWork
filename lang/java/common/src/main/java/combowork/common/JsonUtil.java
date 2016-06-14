@@ -99,6 +99,17 @@ public class JsonUtil {
             return node.asText();
         }
 
+        if (node.isArray()) {
+            Object[] arr = new Object[node.size()];
+            int i = -1;
+            for (JsonNode e : node) {
+                i++;
+                arr[i] = jsonToJavaType(e);
+            }
+
+            return arr;
+        }
+
         if (node.isNull()) {
             return null;
         }
