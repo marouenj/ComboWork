@@ -1,23 +1,23 @@
 [
   {
-    "desc": "empty object",
+    "desc": "root is object, should be array",
     "in": {},
     "out": false
   },
   {
-    "desc": "empty array",
+    "desc": "no test cases",
     "in": [],
     "out": false
   },
   {
-    "desc": "array containing one empty object",
+    "desc": "one invalid test case",
     "in": [
       {}
     ],
     "out": false
   },
   {
-    "desc": "array of empty objects",
+    "desc": "two invalid test cases",
     "in": [
       {},
       {}
@@ -25,7 +25,7 @@
     "out": false
   },
   {
-    "desc": "one var with one val",
+    "desc": "one test case, one val",
     "in": [
       {
         "Case": [
@@ -36,7 +36,7 @@
     "out": true
   },
   {
-    "desc": "one var with multiple vals",
+    "desc": "one test case, multiple vals",
     "in": [
       {
         "Case": [
@@ -48,7 +48,7 @@
     "out": true
   },
   {
-    "desc": "many vars, one val each",
+    "desc": "two test cases with one val each",
     "in": [
       {
         "Case": [
@@ -64,7 +64,7 @@
     "out": true
   },
   {
-    "desc": "many vars, multiple vals each",
+    "desc": "two test cases with multiple vals each",
     "in": [
       {
         "Case": [
@@ -82,7 +82,7 @@
     "out": true
   },
   {
-    "desc": "",
+    "desc": "test cases are not matching in size",
     "in": [
       {
         "Case": [
@@ -99,7 +99,7 @@
     "out": false
   },
   {
-    "desc": "",
+    "desc": "test cases are not matching in type",
     "in": [
       {
         "Case": [
