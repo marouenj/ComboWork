@@ -1,6 +1,6 @@
 [
   {
-    "desc": "",
+    "desc": "one test case, one val",
     "in": [
       {
         "Case": [
@@ -15,7 +15,7 @@
     ]
   },
   {
-    "desc": "",
+    "desc": "one test case, two vals",
     "in": [
       {
         "Case": [
@@ -32,7 +32,7 @@
     ]
   },
   {
-    "desc": "",
+    "desc": "two test cases, one val each",
     "in": [
       {
         "Case": [
@@ -55,7 +55,7 @@
     ]
   },
   {
-    "desc": "",
+    "desc": "two test cases, two vals each",
     "in": [
       {
         "Case": [
@@ -82,7 +82,7 @@
     ]
   },
   {
-    "desc": "",
+    "desc": "one test case, one val (boolean)",
     "in": [
       {
         "Case": [
@@ -97,7 +97,7 @@
     ]
   },
   {
-    "desc": "",
+    "desc": "one test case, one val (null)",
     "in": [
       {
         "Case": [
