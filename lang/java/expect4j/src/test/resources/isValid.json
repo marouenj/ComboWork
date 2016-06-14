@@ -1,23 +1,23 @@
 [
   {
-    "desc": "",
+    "desc": "root is array, should be an object",
     "in": [],
     "out": false
   },
   {
-    "desc": "",
+    "desc": "default key is missing",
     "in": {},
     "out": false
   },
   {
-    "desc": "",
+    "desc": "default val is empty",
     "in": {
       "default": []
     },
     "out": false
   },
   {
-    "desc": "",
+    "desc": "override section is empty",
     "in": {
       "default": [
         1
@@ -27,7 +27,7 @@
     "out": false
   },
   {
-    "desc": "",
+    "desc": "override section is an object, should be an array",
     "in": {
       "default": [
         1
@@ -37,46 +37,7 @@
     "out": false
   },
   {
-    "desc": "",
-    "in": {
-      "default": [
-        1
-      ],
-      "override": [
-        {},
-        {},
-        1
-      ]
-    },
-    "out": false
-  },
-  {
-    "desc": "",
-    "in": {
-      "default": [
-        1
-      ],
-      "override": [
-        {}
-      ]
-    },
-    "out": false
-  },
-  {
-    "desc": "",
-    "in": {
-      "default": [
-        1
-      ],
-      "override": [
-        {},
-        {}
-      ]
-    },
-    "out": false
-  },
-  {
-    "desc": "",
+    "desc": "action is empty",
     "in": {
       "default": [
         1
@@ -93,7 +54,7 @@
     "out": false
   },
   {
-    "desc": "",
+    "desc": "action does not follow the pattern set by default",
     "in": {
       "default": [
         1
@@ -112,7 +73,7 @@
     "out": false
   },
   {
-    "desc": "",
+    "desc": "action does not follow the pattern set by default",
     "in": {
       "default": [
         1
@@ -132,7 +93,7 @@
     "out": false
   },
   {
-    "desc": "",
+    "desc": "second action doesn't follow the pattern set by first action",
     "in": {
       "default": [
         null
