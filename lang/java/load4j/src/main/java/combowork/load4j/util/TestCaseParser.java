@@ -22,11 +22,15 @@ public class TestCaseParser {
      * @return Validation result
      */
     public static boolean isValid(JsonNode testCases) {
-        if (testCases == null || testCases.size() == 0) {
+        if (testCases == null) {
             return false;
         }
 
         if (testCases.getNodeType() != JsonNodeType.ARRAY) { // root should start with an array of objects
+            return false;
+        }
+
+        if (testCases.size() == 0) {
             return false;
         }
 
