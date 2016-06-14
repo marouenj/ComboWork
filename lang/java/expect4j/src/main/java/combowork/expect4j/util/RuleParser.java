@@ -26,43 +26,43 @@ public class RuleParser {
             return false;
         }
 
-        JsonNode defaultVal = root.get("default");
-        if (defaultVal == null || defaultVal.getNodeType() != JsonNodeType.ARRAY || defaultVal.size() == 0) {
+        JsonNode defaultKey = root.get("default");
+        if (defaultKey == null || defaultKey.getNodeType() != JsonNodeType.ARRAY || defaultKey.size() == 0) {
             return false;
         }
 
         List<JsonNodeType> pattern;
         try {
-            pattern = pattern(defaultVal);
+            pattern = pattern(defaultKey);
         } catch (RuntimeException e) {
             return false;
         }
 
-        JsonNode rules = root.get("override");
-        if (rules == null) {
+        JsonNode overrideKey = root.get("override");
+        if (overrideKey == null) {
             return true;
         }
-        if (rules.getNodeType() != JsonNodeType.ARRAY || rules.size() == 0) {
+        if (overrideKey.getNodeType() != JsonNodeType.ARRAY || overrideKey.size() == 0) {
             return false;
         }
 
-        for (JsonNode rule : rules) {
+        for (JsonNode rule : overrideKey) {
             if (rule.getNodeType() != JsonNodeType.OBJECT) {
                 return false;
             }
 
-            JsonNode ruleVal = rule.get("rule");
-            if (ruleVal == null || ruleVal.getNodeType() != JsonNodeType.ARRAY || ruleVal.size() == 0) {
+            JsonNode ruleKey = rule.get("rule");
+            if (ruleKey == null || ruleKey.getNodeType() != JsonNodeType.ARRAY || ruleKey.size() == 0) {
                 return false;
             }
 
-            JsonNode actions = rule.get("action");
-            if (actions == null || actions.getNodeType() != JsonNodeType.ARRAY || actions.size() == 0 || actions.size() != pattern.size()) {
+            JsonNode actionKey = rule.get("action");
+            if (actionKey == null || actionKey.getNodeType() != JsonNodeType.ARRAY || actionKey.size() == 0 || actionKey.size() != pattern.size()) {
                 return false;
             }
 
             int i = -1;
-            for (JsonNode action : actions) {
+            for (JsonNode action : actionKey) {
                 i++;
 
                 if (pattern.get(i) == JsonNodeType.NULL) { // hasn't encountered a deterministic value yet
