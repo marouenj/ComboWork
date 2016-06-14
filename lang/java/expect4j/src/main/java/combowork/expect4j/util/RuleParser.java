@@ -57,7 +57,7 @@ public class RuleParser {
             }
 
             JsonNode actionKey = rule.get("action");
-            if (actionKey == null || actionKey.getNodeType() != JsonNodeType.ARRAY || actionKey.size() == 0 || actionKey.size() != pattern.size()) {
+            if (actionKey == null || actionKey.getNodeType() != JsonNodeType.ARRAY || actionKey.size() != pattern.size()) {
                 return false;
             }
 
