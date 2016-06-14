@@ -144,7 +144,7 @@ public class RuleParser {
      * @param testCase Array of vals representing a testcase
      * @return Array of vals containing the list of expected vals
      */
-    public static JsonNode lookUpRuleForTestcase(JsonNode testCase, JsonNode expected) {
+    private static JsonNode lookUpRuleForTestcase(JsonNode testCase, JsonNode expected) {
         JsonNode match = expected.get("default");
         int closeness = 0;
 

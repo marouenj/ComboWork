@@ -11,6 +11,8 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.FileReader;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 
 /**
@@ -20,10 +22,14 @@ import java.net.URL;
  */
 public class RuleParserTest {
 
+    private Method lookUpRuleForTestCase;
+
     private final static ObjectMapper MAPPER = new ObjectMapper();
 
     @BeforeClass
     public void init() throws NoSuchMethodException {
+        this.lookUpRuleForTestCase = RuleParser.class.getDeclaredMethod("lookUpRuleForTestcase", JsonNode.class, JsonNode.class);
+        this.lookUpRuleForTestCase.setAccessible(true);
     }
 
     @DataProvider(name = "isValid")
@@ -150,7 +156,8 @@ public class RuleParserTest {
     }
 
     @Test(dataProvider = "lookUpRuleForTestcase")
-    public void lookUpRuleForTestcase(JsonNode testcase, JsonNode expect, String expected) {
-        Assert.assertEquals(RuleParser.lookUpRuleForTestcase(testcase, expect).toString(), expected);
+    public void lookUpRuleForTestcase(JsonNode testcase, JsonNode expect, String expected) throws InvocationTargetException, IllegalAccessException {
+        JsonNode actual = (JsonNode) (this.lookUpRuleForTestCase.invoke(null, testcase, expect));
+        Assert.assertEquals(actual.toString(), expected);
     }
 }
