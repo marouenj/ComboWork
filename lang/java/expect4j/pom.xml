@@ -25,7 +25,7 @@
         <version.jmockit>1.21</version.jmockit>
         <version.mockito>1.10.19</version.mockito>
         <version.slf4j>1.7.14</version.slf4j>
-        <version.load4j>1.0.0</version.load4j>
+        <version.load4j>1.1.0</version.load4j>
     </properties>
 
     <dependencies>
