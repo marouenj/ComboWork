@@ -92,6 +92,7 @@ public class TestCaseParser {
             if (val.getNodeType() == JsonNodeType.BOOLEAN
                     || val.getNodeType() == JsonNodeType.NUMBER
                     || val.getNodeType() == JsonNodeType.STRING
+                    || val.getNodeType() == JsonNodeType.ARRAY
                     || val.getNodeType() == JsonNodeType.NULL) {
                 pattern.add(val.getNodeType());
             } else {
