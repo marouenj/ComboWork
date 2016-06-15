@@ -1,6 +1,6 @@
 [
   {
-    "desc": "",
+    "desc": "one test case, not rules",
     "load4j": [
       {
         "Case": [
@@ -21,7 +21,7 @@
     ]
   },
   {
-    "desc": "",
+    "desc": "one test case, not rules",
     "load4j": [
       {
         "Case": [
@@ -44,7 +44,7 @@
     ]
   },
   {
-    "desc": "",
+    "desc": "two test cases, one rule, one test case that matches a rule",
     "load4j": [
       {
         "Case": [
@@ -84,7 +84,7 @@
     ]
   },
   {
-    "desc": "",
+    "desc": "two test cases, one rule, one test case that matches a rule",
     "load4j": [
       {
         "Case": [
@@ -124,6 +124,81 @@
       [
         "string2",
         7,
+        3
+      ]
+    ]
+  },
+  {
+    "desc": "two test cases, two rules, each test case matches a rule",
+    "load4j": [
+      {
+        "Case": [
+          "string",
+          5,
+          [
+            1,
+            2,
+            3,
+            4
+          ]
+        ]
+      },
+      {
+        "Case": [
+          "string2",
+          7,
+          null
+        ]
+      }
+    ],
+    "expect4j": {
+      "default": [
+        1
+      ],
+      "override": [
+        {
+          "rule": [
+            "string",
+            {},
+            [
+              1,
+              2,
+              3,
+              4
+            ]
+          ],
+          "action": [
+            2
+          ]
+        },
+        {
+          "rule": [
+            "string2",
+            7,
+            {}
+          ],
+          "action": [
+            3
+          ]
+        }
+      ]
+    },
+    "out": [
+      [
+        "string",
+        5,
+        [
+          1,
+          2,
+          3,
+          4
+        ],
+        2
+      ],
+      [
+        "string2",
+        7,
+        null,
         3
       ]
     ]

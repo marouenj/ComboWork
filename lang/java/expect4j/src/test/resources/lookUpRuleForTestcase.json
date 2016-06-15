@@ -1,6 +1,6 @@
 [
   {
-    "desc": "",
+    "desc": "no override section, default should be selected",
     "load4j": [
       1,
       "str",
@@ -15,7 +15,7 @@
     "out": "[1]"
   },
   {
-    "desc": "",
+    "desc": "one rule may override the default. However this rule does not apply",
     "load4j": [
       1,
       "str",
@@ -43,11 +43,16 @@
     "out": "[1]"
   },
   {
-    "desc": "",
+    "desc": "two rules are provided. One applies",
     "load4j": [
       1,
       "str",
       true,
+      [
+        1,
+        2,
+        3
+      ],
       null
     ],
     "expect4j": {
@@ -71,6 +76,11 @@
             {},
             {},
             {},
+            [
+              1,
+              2,
+              3
+            ],
             null
           ],
           "action": [
@@ -82,7 +92,7 @@
     "out": "[3]"
   },
   {
-    "desc": "",
+    "desc": "three rules are provided. Two rules apply. One matches more than the second",
     "load4j": [
       1,
       "str",
