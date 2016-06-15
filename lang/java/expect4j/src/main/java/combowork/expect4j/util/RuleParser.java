@@ -167,9 +167,26 @@ public class RuleParser {
             for (JsonNode val : ruleVal) {
                 i++;
                 if (val.getNodeType() == JsonNodeType.OBJECT) {
-                    continue;
-                }
-                if (val.getNodeType() == testCase.get(i).getNodeType() && val.equals(testCase.get(i))) {
+                    if (val.size() == 0) {
+                        continue;
+                    } else {
+                        Boolean found = false;
+                        JsonNode inVal = val.get("in");
+                        for (JsonNode val2 : inVal) {
+                            if (val2.getNodeType() == testCase.get(i).getNodeType() && val2.equals(testCase.get(i))) {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (found) {
+                            matchCandidate = actionVal;
+                            closenessCandidate++;
+                        } else {
+                            closenessCandidate = 0;
+                            break;
+                        }
+                    }
+                } else if (val.getNodeType() == testCase.get(i).getNodeType() && val.equals(testCase.get(i))) {
                     matchCandidate = actionVal;
                     closenessCandidate++;
                 } else {
