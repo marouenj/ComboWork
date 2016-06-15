@@ -91,10 +91,6 @@ public final class TestCaseLoader {
         JsonNode testCases = combowork.load4j.TestCaseAdapter.asIs(load4j);
         try {
             JsonNode expected = JsonUtil.fromFile(expect4j);
-            if (!RuleParser.isValid(testCases)) {
-                throw new RuntimeException();
-            }
-
             return RuleParser.convertToObjectMatrix(testCases, expected);
         } catch (Exception e) {
             handleExceptions(e);
