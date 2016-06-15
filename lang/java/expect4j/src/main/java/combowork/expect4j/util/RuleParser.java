@@ -76,6 +76,8 @@ public class RuleParser {
             }
         }
 
+        // TODO validate rules as well
+
         return true;
     }
 
@@ -92,6 +94,7 @@ public class RuleParser {
             if (val.getNodeType() == JsonNodeType.BOOLEAN
                     || val.getNodeType() == JsonNodeType.NUMBER
                     || val.getNodeType() == JsonNodeType.STRING
+                    || val.getNodeType() == JsonNodeType.ARRAY
                     || val.getNodeType() == JsonNodeType.NULL) {
                 pattern.add(val.getNodeType());
             } else {

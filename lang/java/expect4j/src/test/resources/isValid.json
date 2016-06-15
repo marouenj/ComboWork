@@ -219,5 +219,69 @@
       ]
     },
     "out": true
+  },
+  {
+    "desc": "default/action(s) is one value as array",
+    "in": {
+      "default": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "override": [
+        {
+          "rule": [
+            1,
+            null
+          ],
+          "action": [
+            [
+              1,
+              2,
+              3,
+              4
+            ]
+          ]
+        }
+      ]
+    },
+    "out": true
+  },
+  {
+    "desc": "default/action(s) has one value as array",
+    "in": {
+      "default": [
+        true,
+        1,
+        "string",
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "override": [
+        {
+          "rule": [
+            1,
+            null
+          ],
+          "action": [
+            false,
+            10,
+            "string2",
+            [
+              1,
+              2,
+              3,
+              4
+            ]
+          ]
+        }
+      ]
+    },
+    "out": true
   }
 ]
