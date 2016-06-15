@@ -151,26 +151,26 @@ public class RuleParser {
         JsonNode match = expected.get("default");
         int closeness = 0;
 
-        JsonNode rules = expected.get("override");
-        if (rules == null) {
+        JsonNode overrideVal = expected.get("override");
+        if (overrideVal == null) {
             return match;
         }
 
-        for (JsonNode rule : rules) {
-            JsonNode pattern = rule.get("rule");
-            JsonNode action = rule.get("action");
+        for (JsonNode rule : overrideVal) {
+            JsonNode ruleVal = rule.get("rule");
+            JsonNode actionVal = rule.get("action");
 
             JsonNode matchCandidate = null;
             int closenessCandidate = 0;
 
             int i = -1;
-            for (JsonNode val : pattern) {
+            for (JsonNode val : ruleVal) {
                 i++;
                 if (val.getNodeType() == JsonNodeType.OBJECT) {
                     continue;
                 }
                 if (val.getNodeType() == testCase.get(i).getNodeType() && val.equals(testCase.get(i))) {
-                    matchCandidate = action;
+                    matchCandidate = actionVal;
                     closenessCandidate++;
                 } else {
                     closenessCandidate = 0;
