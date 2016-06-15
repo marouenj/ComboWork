@@ -26,42 +26,6 @@ public class TestCaseParserTest {
     public void init() {
     }
 
-    @DataProvider(name = "isValid")
-    public Object[][] isValid() throws Exception {
-        ClassLoader classLoader = getClass().getClassLoader();
-
-        URL resource = classLoader.getResource("isValid.json");
-        if (resource == null) {
-            throw new Exception();
-        }
-
-        JsonNode testCases = MAPPER.readTree(
-                IOUtils.toString(
-                        new FileReader(
-                                new File(resource.getFile()))));
-
-        Object[][] data = new Object[testCases.size()][];
-
-        int i = -1;
-        for (JsonNode testCase : testCases) {
-            i++;
-            data[i] = new Object[]{testCase.get("in"), testCase.get("out").booleanValue()};
-        }
-
-        return data;
-    }
-
-    /**
-     * Test {@link TestCaseParser#isValid(JsonNode)}
-     *
-     * @param json     Json input structure
-     * @param expected Expected outcome about the validation
-     */
-    @Test(dataProvider = "isValid")
-    public void isValid(JsonNode json, Boolean expected) {
-        Assert.assertEquals(TestCaseParser.isValid(json), (boolean) expected);
-    }
-
     @DataProvider(name = "convertToObjectMatrix")
     public Object[][] convertToObjectMatrix() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();

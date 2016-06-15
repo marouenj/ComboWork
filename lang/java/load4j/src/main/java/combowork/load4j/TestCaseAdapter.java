@@ -39,10 +39,6 @@ public final class TestCaseAdapter {
     public static JsonNode asIs(File file) {
         try {
             JsonNode testCases = JsonUtil.fromFile(file);
-            if (!TestCaseParser.isValid(testCases)) {
-                throw new RuntimeException();
-            }
-
             return testCases;
         } catch (Exception e) {
             handleExceptions(e);
@@ -63,10 +59,6 @@ public final class TestCaseAdapter {
     public static Object[][] testNgAdapter(File file) {
         try {
             JsonNode testCases = JsonUtil.fromFile(file);
-            if (!TestCaseParser.isValid(testCases)) {
-                throw new RuntimeException();
-            }
-
             return TestCaseParser.convertToObjectMatrix(testCases);
         } catch (Exception e) {
             handleExceptions(e);
