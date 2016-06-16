@@ -1,3 +1,10 @@
 #!/bin/bash
 
-docker build -t combowork/validate-testcases .
+TAG=latest
+
+if [[ $1 != "" ]];
+then
+  TAG=$1
+fi
+
+docker build -t combowork/validate-testcases:${TAG} .
